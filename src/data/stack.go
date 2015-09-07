@@ -10,6 +10,9 @@ type Stack struct {
 }
 
 func NewStack(capacity int) *Stack {
+	if capacity <= 0 {
+		panic("Must be 'capacity' > 0")
+	}
 	data := make([]Object, 0, capacity)
 	return &Stack{data: data, capacity: capacity}
 }
