@@ -15,7 +15,13 @@ func TestStack(t *testing.T) {
 	stack.Push(Object{Value: 3})
 	assert.Equal(3, stack.Size())
 
-	poped := stack.Pop()
+	poped, err := stack.Pop()
+	assert.Nil(err)
 	assert.Equal(2, stack.Size())
 	assert.Equal(Object{Value: 3}, poped)
+
+	stack.Clear()
+	assert.Equal(0, stack.Size())
+	_, err = stack.Pop()
+	assert.True(err != nil)
 }
