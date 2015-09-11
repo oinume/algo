@@ -30,6 +30,13 @@ func (s *Stack) Pop() (Object, error) {
 	return o, nil
 }
 
+func (s *Stack) Peek() (Object, error) {
+	if s.Size() == 0 {
+		return Object{}, fmt.Errorf("Stack is empty.")
+	}
+	return s.data[len(s.data)-1], nil
+}
+
 func (s *Stack) Size() int {
 	return len(s.data)
 }
