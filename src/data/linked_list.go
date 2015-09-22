@@ -1,6 +1,8 @@
 package data
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type element struct {
 	data Object
@@ -8,27 +10,55 @@ type element struct {
 }
 
 type linkedList struct {
-	first *element
+	head *element
 }
 
 func NewLinkedList() List {
-	return &linkedList{first: &element{data: Object{}, next: nil}}
+	return &linkedList{head: &element{data: Object{}, next: nil}}
 }
 
 func (l *linkedList) Add(o Object) bool {
-	lastElement := l.first
-	for e := l.first.next; e != nil; e = e.next {
-		fmt.Printf("e = %v\n", e.data)
+	lastElement := l.head
+	for e := l.head.next; e != nil; e = e.next {
 		lastElement = e
 	}
-	fmt.Printf("lastElement = %v\n", lastElement.data)
-	return false
+	lastElement.next = &element{data: o, next: nil}
+	return true
 }
 
-func (l *linkedList) HasNext() bool {
-	return false
+func (l *linkedList) Size() int {
+	var size int = 0
+	for e := l.head.next; e != nil; e = e.next {
+		size++
+	}
+	return size
 }
 
-func (l *linkedList) Next() (Object, error) {
-	return Object{}, nil
+func (l *linkedList) First() (Object, error) {
+	if l.head.next != nil {
+		return l.head.next.data, nil
+	}
+	return Object{0}, fmt.Errorf("Empty list.")
+}
+
+func (l *linkedList) Iterator() Iterator {
+	return &linkedListIterator{cursor: l.head}
+}
+
+type linkedListIterator struct {
+	cursor *element
+}
+
+func (i *linkedListIterator) Next() (Object, error) {
+	if i.HasNext() {
+		data := i.cursor.next.data
+		i.cursor = i.cursor.next
+		return data, nil
+	} else {
+		return Object{0}, fmt.Errorf("No next element.")
+	}
+}
+
+func (i *linkedListIterator) HasNext() bool {
+	return i.cursor.next != nil
 }
