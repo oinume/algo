@@ -1,3 +1,5 @@
+![CircleCI status](https://img.shields.io/circleci/project/oinume/algo.svg)
+
 # algo
 Studying algorithms and data structures with Go.
 
