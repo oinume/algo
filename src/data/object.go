@@ -1,5 +1,9 @@
 package data
 
+import (
+	"fmt"
+)
+
 type Object struct {
 	Value interface{}
 }
@@ -18,4 +22,8 @@ func (o Object) ToIntDefault(defaultValue int) int {
 		return val
 	}
 	return defaultValue
+}
+
+func (o Object) String() string {
+	return fmt.Sprintf("Object{Value: %v}", o.Value)
 }
