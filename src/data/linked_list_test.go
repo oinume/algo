@@ -15,9 +15,6 @@ func TestLinkedList(t *testing.T) {
 	assert := assert.New(t)
 	assert.Equal(3, list.Size())
 
-	first, _ := list.First()
-	assert.Equal(Object{1}, first)
-
 	iterator := list.Iterator()
 	iterator.Next()
 	iterator.Next()
