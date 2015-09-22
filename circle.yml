@@ -1,0 +1,10 @@
+machine:
+  environment:
+    GOPATH: "${HOME}/go"
+    PATH: "${PATH}:${HOME}/go/bin"
+dependencies:
+  pre:
+    - go get -u github.com/constabulary/gb/...
+test:
+  override:
+    - gb test -v
