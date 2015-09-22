@@ -7,6 +7,7 @@ dependencies:
     - echo "" > ~/.gitconfig
     - git config --global url."https://github.com".insteadOf git://github.com
     - go get -u github.com/constabulary/gb/...
+    - gb vendor restore
 test:
   override:
     - gb test -v
