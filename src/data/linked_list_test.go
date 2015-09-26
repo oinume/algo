@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLinkedList(t *testing.T) {
+func TestLinkedListAdd(t *testing.T) {
 	list := NewLinkedList()
 	list.Add(Object{1})
 	list.Add(Object{2})
@@ -14,11 +14,23 @@ func TestLinkedList(t *testing.T) {
 
 	assert := assert.New(t)
 	assert.Equal(3, list.Size())
+}
+
+func TestLinkedListIteratorRemove(t *testing.T) {
+	list := NewLinkedList()
+	for i := 1; i <= 3; i++ {
+		list.Add(Object{i})
+	}
 
 	iterator := list.Iterator()
-	iterator.Next()
-	iterator.Next()
-	last, _ := iterator.Next()
-	assert.Equal(Object{4}, last)
-	assert.Equal(false, iterator.HasNext())
+	first, _ := iterator.Next()
+
+	assert := assert.New(t)
+	assert.Equal(Object{1}, first)
+
+	for i := 1; i <= 3; i++ {
+		removed, err := iterator.Remove()
+		assert.NoError(err)
+		assert.Equal(Object{i}, removed)
+	}
 }
