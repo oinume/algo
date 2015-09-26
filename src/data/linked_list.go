@@ -5,7 +5,7 @@ import (
 )
 
 type element struct {
-	data Object
+	data *Object
 	next *element
 }
 
@@ -14,7 +14,12 @@ type linkedList struct {
 }
 
 func NewLinkedList() List {
-	return &linkedList{head: &element{data: Object{}, next: nil}}
+	return &linkedList{
+		head: &element{
+			data: &Object{Value: 0},
+			next: nil,
+		},
+	}
 }
 
 func (l *linkedList) Add(o Object) bool {
@@ -22,7 +27,7 @@ func (l *linkedList) Add(o Object) bool {
 	for e := l.head.next; e != nil; e = e.next {
 		lastElement = e
 	}
-	lastElement.next = &element{data: o, next: nil}
+	lastElement.next = &element{data: &o, next: nil}
 	return true
 }
 
@@ -36,7 +41,7 @@ func (l *linkedList) Size() int {
 
 func (l *linkedList) First() (Object, error) {
 	if l.head.next != nil {
-		return l.head.next.data, nil
+		return *(l.head.next.data), nil
 	}
 	return Object{0}, fmt.Errorf("Empty list.")
 }
@@ -53,7 +58,7 @@ func (i *linkedListIterator) Next() (Object, error) {
 	if i.HasNext() {
 		data := i.cursor.next.data
 		i.cursor = i.cursor.next
-		return data, nil
+		return *data, nil
 	} else {
 		return Object{0}, fmt.Errorf("No next element.")
 	}
@@ -61,4 +66,15 @@ func (i *linkedListIterator) Next() (Object, error) {
 
 func (i *linkedListIterator) HasNext() bool {
 	return i.cursor.next != nil
+}
+
+func (i *linkedListIterator) Remove() (Object, error) {
+	data := i.cursor.data
+	if data == nil {
+		return Object{0}, fmt.Errorf("No current object")
+	}
+	if i.HasNext() {
+		i.cursor = i.cursor.next
+	}
+	return *data, nil
 }
