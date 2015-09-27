@@ -2,6 +2,13 @@
 	"version": 0,
 	"dependencies": [
 		{
+			"importpath": "github.com/davecgh/go-spew/spew",
+			"repository": "https://github.com/davecgh/go-spew",
+			"revision": "2df174808ee097f90d259e432cc04442cf60be21",
+			"branch": "master",
+			"path": "/spew"
+		},
+		{
 			"importpath": "github.com/stretchr/testify/assert",
 			"repository": "https://github.com/stretchr/testify",
 			"revision": "7c2b1e5640dcf2631213ca962d892bffa1e08860",

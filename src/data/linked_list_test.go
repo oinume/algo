@@ -3,6 +3,7 @@ package data
 import (
 	"testing"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,6 +15,23 @@ func TestLinkedListAdd(t *testing.T) {
 
 	assert := assert.New(t)
 	assert.Equal(3, list.Size())
+}
+
+func TestLinkedListSet(t *testing.T) {
+	assert := assert.New(t)
+	list := NewLinkedList()
+	for i := 1; i <= 3; i++ {
+		list.Add(Object{i})
+	}
+	old, err := list.Set(2, Object{300})
+	assert.NoError(err)
+	assert.Equal(Object{3}, old)
+	var value Object
+	for i := list.Iterator(); i.HasNext(); {
+		value, _ = i.Next()
+	}
+	//t.Logf("list = %v", spew.Sdump(list))
+	assert.Equal(Object{300}, value)
 }
 
 func TestLinkedListIteratorRemove(t *testing.T) {
