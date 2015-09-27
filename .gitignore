@@ -25,4 +25,5 @@ _testmain.go
 
 /vendor/src
 /pkg
-
+.idea
+*.iml
