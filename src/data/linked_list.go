@@ -16,7 +16,7 @@ type linkedList struct {
 func NewLinkedList() List {
 	return &linkedList{
 		head: &element{
-			data: &Object{Value: 0},
+			data: &Object{Value: -1},
 			next: nil,
 		},
 	}
@@ -39,6 +39,28 @@ func (l *linkedList) Size() int {
 	return size
 }
 
+func (l *linkedList) Set(index int, o Object) (Object, error) {
+	if index >= l.Size() {
+		return Object{0}, ErrorIndexOutOfRange
+	}
+
+	i := 0
+	current, prev := l.head, l.head
+	for e := l.head.next; e != nil; e = e.next {
+		prev = current
+		current = e
+		if i == index {
+			break
+		}
+	}
+	oldElement := current
+	oldElement.next = nil
+	newElement := &element{data: &o, next: oldElement.next}
+	prev.next = newElement
+
+	return *oldElement.data, nil
+}
+
 func (l *linkedList) First() (Object, error) {
 	if l.head.next != nil {
 		return *(l.head.next.data), nil
@@ -50,6 +72,9 @@ func (l *linkedList) Iterator() Iterator {
 	return &linkedListIterator{cursor: l.head}
 }
 
+//
+// Iterator
+//
 type linkedListIterator struct {
 	cursor *element
 }
