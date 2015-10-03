@@ -10,12 +10,32 @@ type BinaryTreeNode struct {
 	Right *BinaryTreeNode
 }
 
-func (n *BinaryTreeNode) Accept(visitor Visitor, depth int) {
-	visitor.Visit(n, depth)
+func (n *BinaryTreeNode) TraversePreorder(v Visitor, depth int) {
+	v.Visit(n, depth)
 	if n.Left != nil {
-		n.Left.Accept(visitor, depth+1)
+		n.Left.TraversePreorder(v, depth+1)
 	}
 	if n.Right != nil {
-		n.Right.Accept(visitor, depth+1)
+		n.Right.TraversePreorder(v, depth+1)
 	}
+}
+
+func (n *BinaryTreeNode) TraverseInorder(v Visitor, depth int) {
+	if n.Left != nil {
+		n.Left.TraverseInorder(v, depth+1)
+	}
+	v.Visit(n, depth)
+	if n.Right != nil {
+		n.Right.TraverseInorder(v, depth+1)
+	}
+}
+
+func (n *BinaryTreeNode) TraversePostorder(v Visitor, depth int) {
+	if n.Left != nil {
+		n.Left.TraversePostorder(v, depth+1)
+	}
+	if n.Right != nil {
+		n.Right.TraversePostorder(v, depth+1)
+	}
+	v.Visit(n, depth)
 }
