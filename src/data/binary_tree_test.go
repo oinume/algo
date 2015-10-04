@@ -6,12 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-//       1
-//    ／    ＼
-//   2       3
-//         ／
-//       100
-
 type visitor1 struct {
 	visited []int
 	t       *testing.T
@@ -78,6 +72,13 @@ func TestBinaryTreeNodeTraversePostorder(t *testing.T) {
 	assert.Equal([]int{2, 100, 3, 1}, v3.visited)
 }
 
+// Create a binary tree nodes following form.
+//
+//       1
+//    ／    ＼
+//   2       3
+//         ／
+//       100
 func createBinaryTree() *BinaryTreeNode {
 	root := &BinaryTreeNode{Value: &Object{1}}
 	root.Left = &BinaryTreeNode{Value: &Object{2}}
