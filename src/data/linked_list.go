@@ -22,13 +22,24 @@ func NewLinkedList() List {
 	}
 }
 
-func (l *linkedList) Add(o *Object) bool {
-	lastElement := l.head
+func (l *linkedList) Add(o *Object) {
+	last := l.head
 	for e := l.head.next; e != nil; e = e.next {
-		lastElement = e
+		last = e
 	}
-	lastElement.next = &element{data: o, next: nil}
-	return true
+	last.next = &element{data: o, next: nil}
+}
+
+func (l *linkedList) Insert(index int, o *Object) {
+	current := 0
+	for e := l.head.next; e != nil; e = e.next {
+		if current == index {
+			next := e.next
+			e.next = &element{data: o, next: next}
+			break
+		}
+		current++
+	}
 }
 
 func (l *linkedList) Size() int {

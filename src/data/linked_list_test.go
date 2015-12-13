@@ -16,6 +16,23 @@ func TestLinkedListAdd(t *testing.T) {
 	assert.Equal(3, list.Size())
 }
 
+func TestLinkedListInsert(t *testing.T) {
+	list := NewLinkedList()
+	list.Add(&Object{1})
+	list.Add(&Object{2})
+	list.Add(&Object{4})
+	list.Insert(1, &Object{3})
+
+	assert := assert.New(t)
+	assert.Equal(4, list.Size())
+
+	expect := NewLinkedList()
+	for i := 1; i <= 4; i++ {
+		expect.Add(&Object{i})
+	}
+	assert.Equal(expect, list)
+}
+
 func TestLinkedListSet(t *testing.T) {
 	assert := assert.New(t)
 	list := NewLinkedList()
