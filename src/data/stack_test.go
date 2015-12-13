@@ -20,7 +20,7 @@ func TestStackPop(t *testing.T) {
 	poped, err := stack.Pop()
 	assert.Nil(err)
 	assert.Equal(2, stack.Size())
-	assert.Equal(Object{Value: 3}, poped)
+	assert.Equal(&Object{Value: 3}, poped)
 
 	stack.Clear()
 	assert.Equal(0, stack.Size())
@@ -30,8 +30,8 @@ func TestStackPop(t *testing.T) {
 
 func createStack(capacity int) *Stack {
 	stack := NewStack(capacity)
-	stack.Push(Object{Value: 1})
-	stack.Push(Object{Value: 2})
-	stack.Push(Object{Value: 3})
+	stack.Push(&Object{Value: 1})
+	stack.Push(&Object{Value: 2})
+	stack.Push(&Object{Value: 3})
 	return stack
 }

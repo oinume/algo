@@ -22,16 +22,17 @@ func NewLinkedList() List {
 	}
 }
 
-func (l *linkedList) Add(o Object) bool {
+func (l *linkedList) Add(o *Object) bool {
 	lastElement := l.head
 	for e := l.head.next; e != nil; e = e.next {
 		lastElement = e
 	}
-	lastElement.next = &element{data: &o, next: nil}
+	lastElement.next = &element{data: o, next: nil}
 	return true
 }
 
 func (l *linkedList) Size() int {
+	// TODO: This code is too slow
 	var size int = 0
 	for e := l.head.next; e != nil; e = e.next {
 		size++
@@ -39,9 +40,9 @@ func (l *linkedList) Size() int {
 	return size
 }
 
-func (l *linkedList) Set(index int, o Object) (Object, error) {
+func (l *linkedList) Set(index int, o *Object) (*Object, error) {
 	if index >= l.Size() {
-		return Object{0}, ErrorIndexOutOfRange
+		return nil, ErrorIndexOutOfRange
 	}
 
 	i := 0
@@ -55,17 +56,17 @@ func (l *linkedList) Set(index int, o Object) (Object, error) {
 	}
 	oldElement := current
 	oldElement.next = nil
-	newElement := &element{data: &o, next: oldElement.next}
+	newElement := &element{data: o, next: oldElement.next}
 	prev.next = newElement
 
-	return *oldElement.data, nil
+	return oldElement.data, nil
 }
 
-func (l *linkedList) First() (Object, error) {
+func (l *linkedList) First() (*Object, error) {
 	if l.head.next != nil {
-		return *(l.head.next.data), nil
+		return l.head.next.data, nil
 	}
-	return Object{0}, fmt.Errorf("Empty list.")
+	return nil, fmt.Errorf("Empty list.")
 }
 
 func (l *linkedList) Iterator() Iterator {
@@ -79,13 +80,13 @@ type linkedListIterator struct {
 	cursor *element
 }
 
-func (i *linkedListIterator) Next() (Object, error) {
+func (i *linkedListIterator) Next() (*Object, error) {
 	if i.HasNext() {
 		data := i.cursor.next.data
 		i.cursor = i.cursor.next
-		return *data, nil
+		return data, nil
 	} else {
-		return Object{0}, fmt.Errorf("No next element.")
+		return nil, fmt.Errorf("No next element.")
 	}
 }
 
@@ -93,13 +94,13 @@ func (i *linkedListIterator) HasNext() bool {
 	return i.cursor.next != nil
 }
 
-func (i *linkedListIterator) Remove() (Object, error) {
+func (i *linkedListIterator) Remove() (*Object, error) {
 	data := i.cursor.data
 	if data == nil {
-		return Object{0}, fmt.Errorf("No current object")
+		return nil, fmt.Errorf("No current object")
 	}
 	if i.HasNext() {
 		i.cursor = i.cursor.next
 	}
-	return *data, nil
+	return data, nil
 }

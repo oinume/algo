@@ -14,5 +14,5 @@ func TestObjectString(t *testing.T) {
 func TestObjectToInt(t *testing.T) {
 	assert := assert.New(t)
 	assert.Equal(1, NewObjectInt(1).ToInt())
-	assert.Equal(-1, Object{"abc"}.ToIntDefault(-1))
+	assert.Equal(-1, (&Object{"abc"}).ToIntDefault(-1))
 }
