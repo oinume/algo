@@ -3,10 +3,10 @@ package data
 import "fmt"
 
 type List interface {
-	Add(o Object) bool
+	Add(o *Object) bool
 	Size() int
 	//Remove(o Object) bool
-	Set(index int, o Object) (Object, error)
+	Set(index int, o *Object) (*Object, error)
 	Iterator() Iterator
 }
 
