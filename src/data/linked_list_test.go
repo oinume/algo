@@ -57,6 +57,10 @@ func TestLinkedListRemove(t *testing.T) {
 		list.Add(&Object{i})
 	}
 	assert.True(list.Remove(&Object{1}))
+	if v, err := list.Iterator().Next(); err == nil {
+		assert.Equal(&Object{2}, v)
+	}
+
 	assert.True(list.Remove(&Object{2}))
 	assert.True(list.Remove(&Object{3}))
 	assert.False(list.Remove(&Object{100}))

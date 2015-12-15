@@ -24,7 +24,7 @@ type linkedList struct {
 func NewLinkedList() List {
 	return &linkedList{
 		head: &element{
-			data: &Object{Value: -1},
+			data: nil,
 			next: nil,
 		},
 	}
