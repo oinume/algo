@@ -9,6 +9,14 @@ type element struct {
 	next *element
 }
 
+func (e *element) String() string {
+	if e.next != nil {
+		return fmt.Sprintf("{data: %v, next: %v}", e.data, e.next.data)
+	} else {
+		return fmt.Sprintf("{data: %v, next: nil}", e.data)
+	}
+}
+
 type linkedList struct {
 	head *element
 }
@@ -71,6 +79,27 @@ func (l *linkedList) Set(index int, v Value) (Value, error) {
 	prev.next = newElement
 
 	return oldElement.data, nil
+}
+
+func (l *linkedList) Remove(v Value) bool {
+	current, prev := l.head, l.head
+	var target *element = nil
+	for e := l.head; e != nil; e = e.next {
+		//fmt.Printf("e = %+v\n", e)
+		prev = current
+		current = e
+		if fmt.Sprint(e.data) == fmt.Sprint(v) { // TODO: Equals
+			target = e
+			break
+		}
+	}
+	if target == nil {
+		return false
+	}
+	prev.next = target.next
+	target.data = nil
+	target.next = nil
+	return true
 }
 
 func (l *linkedList) First() (Value, error) {
