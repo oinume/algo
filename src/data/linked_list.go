@@ -5,7 +5,7 @@ import (
 )
 
 type element struct {
-	data *Object
+	data Value
 	next *element
 }
 
@@ -22,20 +22,20 @@ func NewLinkedList() List {
 	}
 }
 
-func (l *linkedList) Add(o *Object) {
+func (l *linkedList) Add(v Value) {
 	last := l.head
 	for e := l.head.next; e != nil; e = e.next {
 		last = e
 	}
-	last.next = &element{data: o, next: nil}
+	last.next = &element{data: v, next: nil}
 }
 
-func (l *linkedList) Insert(index int, o *Object) {
+func (l *linkedList) Insert(index int, v Value) {
 	current := 0
 	for e := l.head.next; e != nil; e = e.next {
 		if current == index {
 			next := e.next
-			e.next = &element{data: o, next: next}
+			e.next = &element{data: v, next: next}
 			break
 		}
 		current++
@@ -51,7 +51,7 @@ func (l *linkedList) Size() int {
 	return size
 }
 
-func (l *linkedList) Set(index int, o *Object) (*Object, error) {
+func (l *linkedList) Set(index int, v Value) (Value, error) {
 	if index >= l.Size() {
 		return nil, ErrorIndexOutOfRange
 	}
@@ -67,13 +67,13 @@ func (l *linkedList) Set(index int, o *Object) (*Object, error) {
 	}
 	oldElement := current
 	oldElement.next = nil
-	newElement := &element{data: o, next: oldElement.next}
+	newElement := &element{data: v, next: oldElement.next}
 	prev.next = newElement
 
 	return oldElement.data, nil
 }
 
-func (l *linkedList) First() (*Object, error) {
+func (l *linkedList) First() (Value, error) {
 	if l.head.next != nil {
 		return l.head.next.data, nil
 	}
@@ -91,7 +91,7 @@ type linkedListIterator struct {
 	cursor *element
 }
 
-func (i *linkedListIterator) Next() (*Object, error) {
+func (i *linkedListIterator) Next() (Value, error) {
 	if i.HasNext() {
 		data := i.cursor.next.data
 		i.cursor = i.cursor.next
@@ -105,7 +105,7 @@ func (i *linkedListIterator) HasNext() bool {
 	return i.cursor.next != nil
 }
 
-func (i *linkedListIterator) Remove() (*Object, error) {
+func (i *linkedListIterator) Remove() (Value, error) {
 	data := i.cursor.data
 	if data == nil {
 		return nil, fmt.Errorf("No current object")

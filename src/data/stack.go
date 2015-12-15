@@ -5,7 +5,7 @@ import (
 )
 
 type Stack struct {
-	data     []*Object
+	data     []Value
 	capacity int
 }
 
@@ -13,24 +13,24 @@ func NewStack(capacity int) *Stack {
 	if capacity <= 0 {
 		panic("Must be 'capacity' > 0")
 	}
-	data := make([]*Object, 0, capacity)
+	data := make([]Value, 0, capacity)
 	return &Stack{data: data, capacity: capacity}
 }
 
-func (s *Stack) Push(o *Object) {
-	s.data = append(s.data, o)
+func (s *Stack) Push(v Value) {
+	s.data = append(s.data, v)
 }
 
-func (s *Stack) Pop() (*Object, error) {
+func (s *Stack) Pop() (Value, error) {
 	if s.Size() == 0 {
 		return nil, fmt.Errorf("Stack is empty.")
 	}
-	o := s.data[len(s.data)-1]
+	v := s.data[len(s.data)-1]
 	s.data = s.data[:len(s.data)-1]
-	return o, nil
+	return v, nil
 }
 
-func (s *Stack) Peek() (*Object, error) {
+func (s *Stack) Peek() (Value, error) {
 	if s.Size() == 0 {
 		return nil, fmt.Errorf("Stack is empty.")
 	}
@@ -42,5 +42,5 @@ func (s *Stack) Size() int {
 }
 
 func (s *Stack) Clear() {
-	s.data = make([]*Object, 0, s.capacity)
+	s.data = make([]Value, 0, s.capacity)
 }

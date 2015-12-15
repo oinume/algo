@@ -42,7 +42,7 @@ func TestLinkedListSet(t *testing.T) {
 	old, err := list.Set(2, &Object{300})
 	assert.NoError(err)
 	assert.Equal(&Object{3}, old)
-	var value *Object
+	var value Value
 	for i := list.Iterator(); i.HasNext(); {
 		value, _ = i.Next()
 	}

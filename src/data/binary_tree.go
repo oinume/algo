@@ -4,7 +4,7 @@ package data
 // Left: left child
 // Right: right child
 type BinaryTreeNode struct {
-	Value *Object
+	Value Value
 	Left  *BinaryTreeNode
 	Right *BinaryTreeNode
 }

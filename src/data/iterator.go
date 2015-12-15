@@ -1,7 +1,7 @@
 package data
 
 type Iterator interface {
-	Next() (*Object, error)
+	Next() (Value, error)
 	HasNext() bool
-	Remove() (*Object, error)
+	Remove() (Value, error)
 }
