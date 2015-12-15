@@ -11,6 +11,7 @@ type Value interface {
 	ToInt() int
 }
 
+// Object is an implementation of `Value`
 type Object struct {
 	Value interface{}
 }
