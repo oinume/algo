@@ -50,6 +50,20 @@ func TestLinkedListSet(t *testing.T) {
 	assert.Equal(&Object{300}, value)
 }
 
+func TestLinkedListRemove(t *testing.T) {
+	assert := assert.New(t)
+	list := NewLinkedList()
+	for i := 1; i <= 3; i++ {
+		list.Add(&Object{i})
+	}
+	assert.True(list.Remove(&Object{1}))
+	assert.True(list.Remove(&Object{2}))
+	assert.True(list.Remove(&Object{3}))
+	assert.Equal(0, list.Size())
+	assert.False(list.Iterator().HasNext())
+	list.Add(&Object{10})
+}
+
 func TestLinkedListIteratorRemove(t *testing.T) {
 	list := NewLinkedList()
 	for i := 1; i <= 3; i++ {

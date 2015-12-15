@@ -9,7 +9,8 @@ type List interface {
 	Insert(index int, v Value)
 	// Get size
 	Size() int
-	//Remove(o Object) bool
+	// Remove given v
+	Remove(v Value) bool
 	Set(index int, v Value) (Value, error)
 	Iterator() Iterator
 }
