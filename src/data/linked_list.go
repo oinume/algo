@@ -82,16 +82,15 @@ func (l *linkedList) Set(index int, v Value) (Value, error) {
 }
 
 func (l *linkedList) Remove(v Value) bool {
-	current, prev := l.head, l.head
+	prev := l.head
 	var target *element = nil
 	for e := l.head; e != nil; e = e.next {
-		//fmt.Printf("e = %+v\n", e)
-		prev = current
-		current = e
 		if fmt.Sprint(e.data) == fmt.Sprint(v) { // TODO: Equals
 			target = e
 			break
 		}
+		prev = e
+		//fmt.Printf("e = %+v, prev = %+v\n", e, prev)
 	}
 	if target == nil {
 		return false
@@ -99,6 +98,8 @@ func (l *linkedList) Remove(v Value) bool {
 	prev.next = target.next
 	target.data = nil
 	target.next = nil
+	//fmt.Printf("target = %+v, prev = %+v\n", target, prev)
+
 	return true
 }
 
