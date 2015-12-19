@@ -72,13 +72,16 @@ func (l *linkedList) Set(index int, v Value) (Value, error) {
 		if i == index {
 			break
 		}
+		i++
 	}
-	oldElement := current
-	oldElement.next = nil
-	newElement := &element{data: v, next: oldElement.next}
+
+	oldValue := current.data
+	next := current.next
+	current.next = nil
+	newElement := &element{data: v, next: next}
 	prev.next = newElement
 
-	return oldElement.data, nil
+	return oldValue, nil
 }
 
 func (l *linkedList) Remove(v Value) bool {

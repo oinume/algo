@@ -48,6 +48,16 @@ func TestLinkedListSet(t *testing.T) {
 	}
 	//t.Logf("list = %v", spew.Sdump(list))
 	assert.Equal(&Object{300}, value)
+
+	oldFirst, err := list.Set(0, &Object{100})
+	assert.NoError(err)
+	assert.Equal(&Object{1}, oldFirst)
+	if i := list.Iterator(); i.HasNext() {
+		first, _ := i.Next()
+		assert.Equal(&Object{100}, first)
+		second, _ := i.Next()
+		assert.Equal(&Object{2}, second)
+	}
 }
 
 func TestLinkedListRemove(t *testing.T) {
