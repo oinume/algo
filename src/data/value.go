@@ -42,6 +42,7 @@ func (o Object) ToIntDefault(def int) int {
 }
 
 func (o Object) ToString() string {
+	// TODO: FIX: panic: interface conversion: interface is int, not string
 	return o.Value.(string)
 }
 
