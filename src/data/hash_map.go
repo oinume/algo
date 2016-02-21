@@ -6,12 +6,14 @@ import (
 
 type hashMap struct {
 	maxSize int
+	size int
 	data []Value
 }
 
 func NewHashMap(maxSize int) Map {
 	return &hashMap{
 		maxSize: maxSize,
+		size: 0,
 		data: make([]Value, maxSize),
 	}
 }
