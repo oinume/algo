@@ -65,6 +65,25 @@ func (h *hashMap) Get(key Value) (Value, error) {
 	return nil, fmt.Errorf("not found")
 }
 
+func (h *hashMap) Remove(key Value) (Value, error) {
+	index := h.getIndex(key)
+	if h.data[index] == nil {
+		return nil, fmt.Errorf("not found")
+	}
+	list := h.data[index]
+	for e := list.Front(); e != nil; e = e.Next() {
+		if i := e.Value.(*item); i.key.Get() == key.Get() {
+			removed := list.Remove(e)
+			return removed.(*item).value, nil
+		}
+	}
+	return nil, fmt.Errorf("not found")
+}
+
+func (h *hashMap) Size() int {
+	return h.size
+}
+
 func (h *hashMap) calculateHashCode(v Value) int {
 	result := 0
 	for _, s := range fmt.Sprint(v) {
