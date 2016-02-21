@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+const defaultMaxSize = 100
+
 type hashMap struct {
 	maxSize int
 	size int
@@ -11,6 +13,9 @@ type hashMap struct {
 }
 
 func NewHashMap(maxSize int) Map {
+	if maxSize <= 0 {
+		maxSize = defaultMaxSize
+	}
 	return &hashMap{
 		maxSize: maxSize,
 		size: 0,
