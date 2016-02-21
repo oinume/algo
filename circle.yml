@@ -1,11 +1,7 @@
-sudo: false
 machine:
   environment:
     GOPATH: "${HOME}/go"
     PATH: "${PATH}:${HOME}/go/bin"
-language: go
-go:
-  - 1.5
 dependencies:
   pre:
     - echo "" > ~/.gitconfig
