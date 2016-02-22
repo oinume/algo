@@ -74,6 +74,7 @@ func (h *hashMap) Remove(key Value) (Value, error) {
 	for e := list.Front(); e != nil; e = e.Next() {
 		if i := e.Value.(*item); i.key.Get() == key.Get() {
 			removed := list.Remove(e)
+			h.size--
 			return removed.(*item).value, nil
 		}
 	}
