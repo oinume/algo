@@ -103,3 +103,8 @@ func (h *hashMap) getIndex(key Value) int {
 	}
 	return hashCode % h.maxSize
 }
+
+type openAddressHashMap struct {
+	maxSize int
+	size int
+}
