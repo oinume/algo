@@ -6,8 +6,8 @@ dependencies:
   pre:
     - echo "" > ~/.gitconfig
     - git config --global url."https://github.com".insteadOf git://github.com
-    - go get -u github.com/constabulary/gb/...
-    - gb vendor restore
+    - go get github.com/Masterminds/glide
+    - glide install
 test:
   override:
-    - gb test -v
+    - go test -v ./...
