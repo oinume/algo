@@ -15,7 +15,10 @@ dependencies:
     - cd $HOME && tar xzf go$GO_VERSION.linux-amd64.tar.gz
     - go version
     - go get github.com/Masterminds/glide
-    - glide install
+    - mkdir -p $(dirname ${GOPATH_PROJECT})
+    - rm -rf ${GOPATH_PROJECT}
+    - ln -s ~/lekcije ${GOPATH_PROJECT}
+    - cd ${GOPATH_PROJECT} && glide install
 test:
   override:
-    - go test -v ./...
+    - cd ${GOPATH_PROJECT} && go test -v ./...
