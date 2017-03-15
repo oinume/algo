@@ -5,7 +5,7 @@ machine:
     GOBIN: "${GOPATH}/bin"
     GO_VERSION: "1.7.5"
     PATH: "${GOPATH}/bin:${HOME}/go/bin:${PATH}"
-    GOPATH_PROJECT: "${GOPATH}/src/github.com/oinume/lekcije"
+    GOPATH_PROJECT: "${GOPATH}/src/github.com/oinume/algo"
 dependencies:
   pre:
     - echo "" > ~/.gitconfig
@@ -17,7 +17,7 @@ dependencies:
     - go get github.com/Masterminds/glide
     - mkdir -p $(dirname ${GOPATH_PROJECT})
     - rm -rf ${GOPATH_PROJECT}
-    - ln -s ~/lekcije ${GOPATH_PROJECT}
+    - ln -s ~/algo ${GOPATH_PROJECT}
     - cd ${GOPATH_PROJECT} && glide install
 test:
   override:
