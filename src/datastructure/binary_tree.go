@@ -1,4 +1,4 @@
-package data
+package datastructure
 
 // Binary tree node
 // Left: left child

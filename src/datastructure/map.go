@@ -1,4 +1,4 @@
-package data
+package datastructure
 
 type Map interface {
 	Put(key Value, value Value) Value
