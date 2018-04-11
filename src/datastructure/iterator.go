@@ -1,4 +1,4 @@
-package data
+package datastructure
 
 type Iterator interface {
 	Next() (Value, error)
