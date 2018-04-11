@@ -1,5 +1,0 @@
-package: "github.com/oinume/algo"
-import:
-- package: github.com/stretchr/testify
-  subpackages:
-  - assert

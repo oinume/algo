@@ -14,11 +14,11 @@ dependencies:
     - cd $HOME && curl -O https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz
     - cd $HOME && tar xzf go$GO_VERSION.linux-amd64.tar.gz
     - go version
-    - go get github.com/Masterminds/glide
+    - go get github.com/golang/dep
     - mkdir -p $(dirname ${GOPATH_PROJECT})
     - rm -rf ${GOPATH_PROJECT}
     - ln -s ~/algo ${GOPATH_PROJECT}
-    - cd ${GOPATH_PROJECT} && glide install
+    - cd ${GOPATH_PROJECT} && dep ensure -v
 test:
   override:
     - cd ${GOPATH_PROJECT} && go test -v ./...
