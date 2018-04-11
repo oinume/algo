@@ -5,20 +5,20 @@ Studying algorithms and data structures with Go.
 
 ## Set up
 
-At first, Install gb.
+At first, Install dep.
 
 ```bash
-go get -u github.com/constabulary/gb/...
+go get github.com/golang/dep/cmd/dep
 ```
 
 Then install dependencies.
 
 ```bash
-gb vendor restore
+dep ensure -v
 ```
 
 ## Run
 
 ```
-gb test -v
+go test -v ./...
 ```
