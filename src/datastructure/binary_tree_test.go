@@ -12,7 +12,7 @@ type visitor1 struct {
 }
 
 func (v *visitor1) Visit(node *BinaryTreeNode, depth int) {
-	v.visited = append(v.visited, node.Value.ToInt())
+	v.visited = append(v.visited, node.Value.Int())
 	v.t.Logf("value = %v\n", node.Value)
 }
 
@@ -34,7 +34,7 @@ type visitor2 struct {
 }
 
 func (v *visitor2) Visit(node *BinaryTreeNode, depth int) {
-	v.visited = append(v.visited, node.Value.ToInt())
+	v.visited = append(v.visited, node.Value.Int())
 	v.t.Logf("value = %v\n", node.Value)
 }
 
@@ -56,7 +56,7 @@ type visitor3 struct {
 }
 
 func (v *visitor3) Visit(node *BinaryTreeNode, depth int) {
-	v.visited = append(v.visited, node.Value.ToInt())
+	v.visited = append(v.visited, node.Value.Int())
 	v.t.Logf("value = %v\n", node.Value)
 }
 
