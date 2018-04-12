@@ -7,7 +7,7 @@ import (
 
 const defaultMaxSize = 100
 
-type hashMap struct {
+type hashTableChaining struct {
 	maxSize int
 	size int
 	data []*list.List
@@ -18,18 +18,18 @@ type item struct {
 	value Value
 }
 
-func NewHashMap(maxSize int) Map {
+func NewHashTableChaining(maxSize int) Map {
 	if maxSize <= 0 {
 		maxSize = defaultMaxSize
 	}
-	return &hashMap{
+	return &hashTableChaining{
 		maxSize: maxSize,
 		size: 0,
 		data: make([]*list.List, maxSize),
 	}
 }
 
-func (h *hashMap) Put(key Value, value Value) Value {
+func (h *hashTableChaining) Put(key Value, value Value) Value {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
 		// Put as new
@@ -51,7 +51,7 @@ func (h *hashMap) Put(key Value, value Value) Value {
 	return nil
 }
 
-func (h *hashMap) Get(key Value) (Value, error) {
+func (h *hashTableChaining) Get(key Value) (Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
 		return nil, fmt.Errorf("not found")
@@ -65,7 +65,7 @@ func (h *hashMap) Get(key Value) (Value, error) {
 	return nil, fmt.Errorf("not found")
 }
 
-func (h *hashMap) Remove(key Value) (Value, error) {
+func (h *hashTableChaining) Remove(key Value) (Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
 		return nil, fmt.Errorf("not found")
@@ -81,11 +81,11 @@ func (h *hashMap) Remove(key Value) (Value, error) {
 	return nil, fmt.Errorf("not found")
 }
 
-func (h *hashMap) Size() int {
+func (h *hashTableChaining) Size() int {
 	return h.size
 }
 
-func (h *hashMap) calculateHashCode(v Value) int {
+func (h *hashTableChaining) calculateHashCode(v Value) int {
 	result := 0
 	for _, s := range fmt.Sprint(v) {
 		result += int(s)
@@ -93,7 +93,7 @@ func (h *hashMap) calculateHashCode(v Value) int {
 	return result
 }
 
-func (h *hashMap) getIndex(key Value) int {
+func (h *hashTableChaining) getIndex(key Value) int {
 	k, ok := key.(Hashable)
 	var hashCode int
 	if ok {
@@ -102,9 +102,4 @@ func (h *hashMap) getIndex(key Value) int {
 		hashCode = h.calculateHashCode(key)
 	}
 	return hashCode % h.maxSize
-}
-
-type openAddressHashMap struct {
-	maxSize int
-	size int
 }

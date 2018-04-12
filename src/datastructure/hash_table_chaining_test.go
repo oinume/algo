@@ -8,14 +8,14 @@ import (
 
 func TestHashMapPut(t *testing.T) {
 	assert := assert.New(t)
-	hashMap := NewHashMap(10)
+	hashMap := NewHashTableChaining(10)
 	assert.Nil(hashMap.Put(&Object{1}, &Object{1}))
 	assert.Equal(1, hashMap.Size())
 }
 
 func TestHashMapGet(t *testing.T) {
 	assert := assert.New(t)
-	hashMap := NewHashMap(10)
+	hashMap := NewHashTableChaining(10)
 	hashMap.Put(&Object{1}, &Object{1})
 	value, err := hashMap.Get(&Object{1})
 	assert.NoError(err)
@@ -24,7 +24,7 @@ func TestHashMapGet(t *testing.T) {
 
 func TestHashMapRemove(t *testing.T) {
 	assert := assert.New(t)
-	hashMap := NewHashMap(10)
+	hashMap := NewHashTableChaining(10)
 	hashMap.Put(&Object{1}, &Object{1})
 	value, err := hashMap.Remove(&Object{1})
 	assert.NoError(err)
