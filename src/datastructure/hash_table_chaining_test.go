@@ -6,14 +6,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHashMapPut(t *testing.T) {
+func TestHashTableChaining_Put(t *testing.T) {
 	assert := assert.New(t)
 	hashMap := NewHashTableChaining(10)
 	assert.Nil(hashMap.Put(&Object{1}, &Object{1}))
 	assert.Equal(1, hashMap.Size())
 }
 
-func TestHashMapGet(t *testing.T) {
+func TestHashTableChaining_Get(t *testing.T) {
 	assert := assert.New(t)
 	hashMap := NewHashTableChaining(10)
 	hashMap.Put(&Object{1}, &Object{1})
@@ -22,7 +22,7 @@ func TestHashMapGet(t *testing.T) {
 	assert.Equal(&Object{1}, value)
 }
 
-func TestHashMapRemove(t *testing.T) {
+func TestHashTableChaining_Remove(t *testing.T) {
 	assert := assert.New(t)
 	hashMap := NewHashTableChaining(10)
 	hashMap.Put(&Object{1}, &Object{1})
