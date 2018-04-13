@@ -44,6 +44,7 @@ func (h *hashTableChaining) Put(key Value, value Value) Value {
 				// Replace an old item with new one
 				l.Remove(e)
 				l.PushBack(&item{key: key, value: value})
+				h.size++
 				return i.value
 			}
 		}
