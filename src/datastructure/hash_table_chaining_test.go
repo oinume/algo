@@ -13,6 +13,14 @@ func TestHashTableChaining_Put(t *testing.T) {
 	assert.Equal(1, hashMap.Size())
 }
 
+func TestHashTableChaining_Put_Collision(t *testing.T) {
+	// TODO: test same hash code
+	assert := assert.New(t)
+	hashMap := NewHashTableChaining(10)
+	assert.Nil(hashMap.Put(&Object{1}, &Object{1}))
+	assert.Equal(1, hashMap.Size())
+}
+
 func TestHashTableChaining_Get(t *testing.T) {
 	assert := assert.New(t)
 	hashMap := NewHashTableChaining(10)
