@@ -53,6 +53,16 @@ func TestHashTableChaining_Put_Collision(t *testing.T) {
 	a.Equal(&hashableObject{Object{20}}, actual)
 }
 
+func TestHashTableChaining_Put_Collision_Exists(t *testing.T) {
+	a := assert.New(t)
+
+	table := NewHashTableChaining(10)
+	table.Put(&hashableObject{Object{1}}, &hashableObject{Object{10}})
+	table.Put(&hashableObject{Object{1}}, &hashableObject{Object{10}})
+	table.Put(&hashableObject{Object{2}}, &hashableObject{Object{20}})
+	a.Equal(2, table.Size())
+}
+
 func TestHashTableChaining_Get(t *testing.T) {
 	assert := assert.New(t)
 	hashMap := NewHashTableChaining(10)
