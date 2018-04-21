@@ -51,15 +51,6 @@ func (h *hashTableChaining) Put(key Value, value Value) Value {
 			l.PushBack(&item{key: key, value: value})
 			h.size++
 		}
-		//for e := l.Front(); e != nil; e = e.Next() {
-		//	if i := e.Value.(*e); i.key.Get() == key.Get() {
-		//		// Replace an old e with new one
-		//		l.Remove(e)
-		//		l.PushBack(&e{key: key, value: value})
-		//		h.size++
-		//		return i.value
-		//	}
-		//}
 	}
 	return nil
 }
