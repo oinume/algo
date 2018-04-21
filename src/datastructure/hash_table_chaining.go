@@ -3,6 +3,7 @@ package datastructure
 import (
 	"fmt"
 	"container/list"
+	"reflect"
 )
 
 const defaultMaxSize = 100
@@ -39,15 +40,26 @@ func (h *hashTableChaining) Put(key Value, value Value) Value {
 		h.size++
 	} else {
 		l := h.data[index]
+		found := false
 		for e := l.Front(); e != nil; e = e.Next() {
-			if i := e.Value.(*item); i.key.Get() == key.Get() {
-				// Replace an old item with new one
-				l.Remove(e)
-				l.PushBack(&item{key: key, value: value})
-				h.size++
-				return i.value
+			if i := e.Value.(*item); reflect.DeepEqual(i.key.Get(), key.Get()) {
+				found = true
+				break
 			}
 		}
+		if !found {
+			l.PushBack(&item{key: key, value: value})
+			h.size++
+		}
+		//for e := l.Front(); e != nil; e = e.Next() {
+		//	if i := e.Value.(*e); i.key.Get() == key.Get() {
+		//		// Replace an old e with new one
+		//		l.Remove(e)
+		//		l.PushBack(&e{key: key, value: value})
+		//		h.size++
+		//		return i.value
+		//	}
+		//}
 	}
 	return nil
 }

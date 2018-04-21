@@ -27,6 +27,7 @@ func (ho *hashableObject) Int() int {
 	return ho.object.Int()
 }
 
+// Always return same hash code
 func (ho *hashableObject) HashCode() int {
 	return 1
 }
