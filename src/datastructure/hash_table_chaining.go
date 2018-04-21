@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"container/list"
 	"reflect"
+	"errors"
 )
 
 const defaultMaxSize = 100
+var ErrKeyNotExists = errors.New("key not exists")
 
 type hashTableChaining struct {
 	maxSize int
@@ -58,7 +60,7 @@ func (h *hashTableChaining) Put(key Value, value Value) Value {
 func (h *hashTableChaining) Get(key Value) (Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
-		return nil, fmt.Errorf("not found")
+		return nil, ErrKeyNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
@@ -66,13 +68,13 @@ func (h *hashTableChaining) Get(key Value) (Value, error) {
 			return i.value, nil
 		}
 	}
-	return nil, fmt.Errorf("not found")
+	return nil, ErrKeyNotExists
 }
 
 func (h *hashTableChaining) Remove(key Value) (Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
-		return nil, fmt.Errorf("not found")
+		return nil, ErrKeyNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
@@ -82,7 +84,7 @@ func (h *hashTableChaining) Remove(key Value) (Value, error) {
 			return removed.(*item).value, nil
 		}
 	}
-	return nil, fmt.Errorf("not found")
+	return nil, ErrKeyNotExists
 }
 
 func (h *hashTableChaining) Size() int {
