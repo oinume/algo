@@ -109,3 +109,20 @@ func (h *hashTableChaining) getIndex(key Value) int {
 	}
 	return hashCode % h.maxSize
 }
+
+// TODO: Replace getIndex by this
+func (h *hashTableChaining) find(key Value) (*list.List, error) {
+	k, ok := key.(Hashable)
+	var hashCode int
+	if ok {
+		hashCode = k.HashCode()
+	} else {
+		hashCode = h.calculateHashCode(key)
+	}
+	index := hashCode % h.maxSize
+	l := h.data[index]
+	if l == nil {
+		return nil, ErrKeyNotExists
+	}
+	return l, nil
+}
