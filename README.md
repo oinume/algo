@@ -1,4 +1,5 @@
-[![CircleCI status](https://img.shields.io/circleci/project/oinume/algo.svg)](https://circleci.com/gh/oinume/algo)
+[![CircleCI](https://circleci.com/gh/oinume/algo/tree/master.svg?style=svg)](https://circleci.com/gh/oinume/algo/tree/master)
+[![codecov](https://codecov.io/gh/oinume/algo/branch/master/graph/badge.svg)](https://codecov.io/gh/oinume/algo)
 
 # algo
 Studying algorithms and data structures with Go.
