@@ -35,8 +35,8 @@ jobs:
       - run:
           name: "Run go-test"
           command: |
-            go test -v ./...
-#      - run:
-#          name: "Upload to codecov"
-#          command: |
-#            bash <(curl -s https://codecov.io/bash)
+            go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+      - run:
+          name: "Upload to codecov"
+          command: |
+            bash <(curl -s https://codecov.io/bash)

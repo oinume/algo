@@ -3,9 +3,12 @@ package datastructure
 import (
 	"fmt"
 	"container/list"
+	"reflect"
+	"errors"
 )
 
 const defaultMaxSize = 100
+var ErrKeyNotExists = errors.New("key not exists")
 
 type hashTableChaining struct {
 	maxSize int
@@ -40,13 +43,15 @@ func (h *hashTableChaining) Put(key Value, value Value) Value {
 	} else {
 		l := h.data[index]
 		for e := l.Front(); e != nil; e = e.Next() {
-			if i := e.Value.(*item); i.key.Get() == key.Get() {
+			if i := e.Value.(*item); reflect.DeepEqual(i.key.Get(), key.Get()) {
 				// Replace an old item with new one
 				l.Remove(e)
 				l.PushBack(&item{key: key, value: value})
 				return i.value
 			}
 		}
+		l.PushBack(&item{key: key, value: value})
+		h.size++
 	}
 	return nil
 }
@@ -54,7 +59,7 @@ func (h *hashTableChaining) Put(key Value, value Value) Value {
 func (h *hashTableChaining) Get(key Value) (Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
-		return nil, fmt.Errorf("not found")
+		return nil, ErrKeyNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
@@ -62,13 +67,13 @@ func (h *hashTableChaining) Get(key Value) (Value, error) {
 			return i.value, nil
 		}
 	}
-	return nil, fmt.Errorf("not found")
+	return nil, ErrKeyNotExists
 }
 
 func (h *hashTableChaining) Remove(key Value) (Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
-		return nil, fmt.Errorf("not found")
+		return nil, ErrKeyNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
@@ -78,7 +83,7 @@ func (h *hashTableChaining) Remove(key Value) (Value, error) {
 			return removed.(*item).value, nil
 		}
 	}
-	return nil, fmt.Errorf("not found")
+	return nil, ErrKeyNotExists
 }
 
 func (h *hashTableChaining) Size() int {
@@ -102,4 +107,21 @@ func (h *hashTableChaining) getIndex(key Value) int {
 		hashCode = h.calculateHashCode(key)
 	}
 	return hashCode % h.maxSize
+}
+
+// TODO: Replace getIndex by this
+func (h *hashTableChaining) find(key Value) (*list.List, error) {
+	k, ok := key.(Hashable)
+	var hashCode int
+	if ok {
+		hashCode = k.HashCode()
+	} else {
+		hashCode = h.calculateHashCode(key)
+	}
+	index := hashCode % h.maxSize
+	l := h.data[index]
+	if l == nil {
+		return nil, ErrKeyNotExists
+	}
+	return l, nil
 }
