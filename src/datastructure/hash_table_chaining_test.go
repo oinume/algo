@@ -7,28 +7,28 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-type hashableObject struct {
+type hashable struct {
 	object Object
 }
 
-func (ho *hashableObject) Get() interface{} {
-	return ho.object
+func (h *hashable) Get() interface{} {
+	return h.object
 }
 
-func (ho *hashableObject) Receive(v interface{}) error {
-	return ho.object.Receive(v)
+func (h *hashable) Receive(v interface{}) error {
+	return h.object.Receive(v)
 }
 
-func (ho *hashableObject) String() string {
-	return ho.object.String()
+func (h *hashable) String() string {
+	return h.object.String()
 }
 
-func (ho *hashableObject) Int() int {
-	return ho.object.Int()
+func (h *hashable) Int() int {
+	return h.object.Int()
 }
 
 // Always return same hash code
-func (ho *hashableObject) HashCode() int {
+func (h *hashable) HashCode() int {
 	return 1
 }
 
@@ -44,23 +44,28 @@ func TestHashTableChaining_Put_Collision(t *testing.T) {
 	r := require.New(t)
 
 	table := NewHashTableChaining(10)
-	table.Put(&hashableObject{Object{1}}, &hashableObject{Object{10}})
-	table.Put(&hashableObject{Object{2}}, &hashableObject{Object{20}})
+	table.Put(&hashable{Object{1}}, &hashable{Object{10}})
+	table.Put(&hashable{Object{2}}, &hashable{Object{20}})
 	a.Equal(2, table.Size())
 
-	actual, err := table.Get(&hashableObject{Object{2}})
+	actual, err := table.Get(&hashable{Object{2}})
 	r.NoError(err)
-	a.Equal(&hashableObject{Object{20}}, actual)
+	a.Equal(&hashable{Object{20}}, actual)
 }
 
 func TestHashTableChaining_Put_Collision_Exists(t *testing.T) {
 	a := assert.New(t)
+	r := require.New(t)
 
 	table := NewHashTableChaining(10)
-	table.Put(&hashableObject{Object{1}}, &hashableObject{Object{10}})
-	table.Put(&hashableObject{Object{1}}, &hashableObject{Object{10}})
-	table.Put(&hashableObject{Object{2}}, &hashableObject{Object{20}})
+	table.Put(&hashable{Object{1}}, &hashable{Object{10}})
+	table.Put(&hashable{Object{1}}, &hashable{Object{11}})
+	table.Put(&hashable{Object{2}}, &hashable{Object{20}})
 	a.Equal(2, table.Size())
+
+	actual, err := table.Get(&hashable{Object{1}})
+	r.NoError(err)
+	a.Equal(&hashable{Object{11}}, actual)
 }
 
 func TestHashTableChaining_Get(t *testing.T) {
