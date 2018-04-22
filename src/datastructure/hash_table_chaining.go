@@ -42,17 +42,16 @@ func (h *hashTableChaining) Put(key Value, value Value) Value {
 		h.size++
 	} else {
 		l := h.data[index]
-		found := false
 		for e := l.Front(); e != nil; e = e.Next() {
 			if i := e.Value.(*item); reflect.DeepEqual(i.key.Get(), key.Get()) {
-				found = true
-				break
+				// Replace an old item with new one
+				l.Remove(e)
+				l.PushBack(&item{key: key, value: value})
+				return i.value
 			}
 		}
-		if !found {
-			l.PushBack(&item{key: key, value: value})
-			h.size++
-		}
+		l.PushBack(&item{key: key, value: value})
+		h.size++
 	}
 	return nil
 }
