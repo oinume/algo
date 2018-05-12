@@ -1,23 +1,24 @@
 package datastructure
 
 import (
-	"fmt"
 	"container/list"
-	"reflect"
 	"errors"
+	"fmt"
+	"reflect"
 )
 
 const defaultMaxSize = 100
+
 var ErrKeyNotExists = errors.New("key not exists")
 
 type hashTableChaining struct {
 	maxSize int
-	size int
-	data []*list.List
+	size    int
+	data    []*list.List
 }
 
 type item struct {
-	key Value
+	key   Value
 	value Value
 }
 
@@ -27,8 +28,8 @@ func NewHashTableChaining(maxSize int) Map {
 	}
 	return &hashTableChaining{
 		maxSize: maxSize,
-		size: 0,
-		data: make([]*list.List, maxSize),
+		size:    0,
+		data:    make([]*list.List, maxSize),
 	}
 }
 
