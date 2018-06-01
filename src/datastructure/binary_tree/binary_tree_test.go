@@ -1,8 +1,9 @@
-package datastructure
+package binary_tree
 
 import (
 	"testing"
 
+	"github.com/oinume/algo/src/datastructure/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -80,9 +81,9 @@ func TestBinaryTreeNodeTraversePostorder(t *testing.T) {
 //         ／
 //       100
 func createBinaryTree() *BinaryTreeNode {
-	root := &BinaryTreeNode{Value: &Object{1}}
-	root.Left = &BinaryTreeNode{Value: &Object{2}}
-	root.Right = &BinaryTreeNode{Value: &Object{3}}
-	root.Right.Left = &BinaryTreeNode{Value: &Object{100}}
+	root := &BinaryTreeNode{Value: &types.Object{1}}
+	root.Left = &BinaryTreeNode{Value: &types.Object{2}}
+	root.Right = &BinaryTreeNode{Value: &types.Object{3}}
+	root.Right.Left = &BinaryTreeNode{Value: &types.Object{100}}
 	return root
 }

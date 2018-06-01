@@ -1,11 +1,13 @@
-package datastructure
+package linked_list
 
 import (
 	"fmt"
+
+	"github.com/oinume/algo/src/datastructure/types"
 )
 
 type element struct {
-	data Value
+	data types.Value
 	next *element
 }
 
@@ -21,7 +23,7 @@ type linkedList struct {
 	head *element
 }
 
-func NewLinkedList() List {
+func NewLinkedList() types.List {
 	return &linkedList{
 		head: &element{
 			data: nil,
@@ -30,7 +32,7 @@ func NewLinkedList() List {
 	}
 }
 
-func (l *linkedList) Add(v Value) {
+func (l *linkedList) Add(v types.Value) {
 	last := l.head
 	for e := l.head.next; e != nil; e = e.next {
 		last = e
@@ -38,7 +40,7 @@ func (l *linkedList) Add(v Value) {
 	last.next = &element{data: v, next: nil}
 }
 
-func (l *linkedList) Insert(index int, v Value) {
+func (l *linkedList) Insert(index int, v types.Value) {
 	current := 0
 	for e := l.head.next; e != nil; e = e.next {
 		if current == index {
@@ -59,9 +61,9 @@ func (l *linkedList) Size() int {
 	return size
 }
 
-func (l *linkedList) Set(index int, v Value) (Value, error) {
+func (l *linkedList) Set(index int, v types.Value) (types.Value, error) {
 	if index >= l.Size() {
-		return nil, ErrorIndexOutOfRange
+		return nil, types.ErrorIndexOutOfRange
 	}
 
 	i := 0
@@ -84,7 +86,7 @@ func (l *linkedList) Set(index int, v Value) (Value, error) {
 	return oldValue, nil
 }
 
-func (l *linkedList) Remove(v Value) bool {
+func (l *linkedList) Remove(v types.Value) bool {
 	prev := l.head
 	var target *element = nil
 	for e := l.head; e != nil; e = e.next {
@@ -106,14 +108,14 @@ func (l *linkedList) Remove(v Value) bool {
 	return true
 }
 
-func (l *linkedList) First() (Value, error) {
+func (l *linkedList) First() (types.Value, error) {
 	if l.head.next != nil {
 		return l.head.next.data, nil
 	}
 	return nil, fmt.Errorf("Empty list.")
 }
 
-func (l *linkedList) Iterator() Iterator {
+func (l *linkedList) Iterator() types.Iterator {
 	return &linkedListIterator{cursor: l.head}
 }
 
@@ -124,7 +126,7 @@ type linkedListIterator struct {
 	cursor *element
 }
 
-func (i *linkedListIterator) Next() (Value, error) {
+func (i *linkedListIterator) Next() (types.Value, error) {
 	if i.HasNext() {
 		data := i.cursor.next.data
 		i.cursor = i.cursor.next
@@ -138,7 +140,7 @@ func (i *linkedListIterator) HasNext() bool {
 	return i.cursor.next != nil
 }
 
-func (i *linkedListIterator) Remove() (Value, error) {
+func (i *linkedListIterator) Remove() (types.Value, error) {
 	data := i.cursor.data
 	if data == nil {
 		return nil, fmt.Errorf("No current object")
