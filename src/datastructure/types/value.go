@@ -1,4 +1,4 @@
-package datastructure
+package types
 
 type Value interface {
 	Get() interface{}

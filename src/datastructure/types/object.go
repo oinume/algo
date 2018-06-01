@@ -1,4 +1,4 @@
-package datastructure
+package types
 
 import "fmt"
 
@@ -40,4 +40,3 @@ func (o Object) StringDefault(def string) string {
 	}
 	return def
 }
-
