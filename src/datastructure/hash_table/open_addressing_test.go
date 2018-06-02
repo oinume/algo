@@ -8,6 +8,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestBucketKey_IsEmpty(t *testing.T) {
+	a := assert.New(t)
+
+	empty := &bucketKey{data: &types.Object{Value: emptyKey{}}}
+	a.True(empty.isEmpty())
+}
+
 func TestBucketKey_HashCode(t *testing.T) {
 	a := assert.New(t)
 	testCases := []struct {
@@ -52,7 +59,16 @@ func TestOpenAddressing_Put(t *testing.T) {
 }
 
 func TestOpenAddressing_Put_Rehash(t *testing.T) {
-	// TODO: implment
+	a := assert.New(t)
+	r := require.New(t)
+	hashTable := NewOpenAddressing()
+
+	ret, err := hashTable.Put(&types.Object{"abc"}, &types.Object{"ABC"})
+	r.NoError(err)
+	a.Nil(ret)
+	ret, err = hashTable.Put(&types.Object{"cba"}, &types.Object{"CBA"})
+	r.NoError(err)
+	a.Nil(ret)
 }
 
 func TestOpenAddressing_Get(t *testing.T) {

@@ -79,28 +79,30 @@ func (h *openAddressing) Put(key types.Value, value types.Value) (types.Value, e
 	}
 
 	givenKey := &bucketKey{data: key}
-	hashCode := givenKey.HashCode()
+	//hashCode := givenKey.HashCode()
+	index := h.hash(givenKey)
 	count := 0
-	for k := h.table[hashCode].key; !k.isEmpty() && !k.isDeleted(); {
+	for k := h.table[index].key; !k.isEmpty() && !k.isDeleted(); {
+		fmt.Printf("key = %v, index = %v\n", key, index)
 		if reflect.DeepEqual(givenKey.data, k.data) {
 			// Already exists, replace it with a new value
-			old := h.table[hashCode].value
-			h.put(givenKey, value, hashCode)
+			old := h.table[index].value
+			h.put(givenKey, value, index)
 			return old, nil
 		}
 		if count+1 > h.maxSize {
 			return nil, ErrHashTableIsFull
 		}
-		hashCode = h.rehash(hashCode)
+		index = h.rehash(index)
 		count++
 	}
-	h.put(givenKey, value, hashCode)
+	h.put(givenKey, value, index)
 	h.size++
 	return nil, nil
 }
 
-func (h *openAddressing) put(key *bucketKey, value types.Value, hashCode int) {
-	h.table[hashCode] = &bucket{
+func (h *openAddressing) put(key *bucketKey, value types.Value, index int) {
+	h.table[index] = &bucket{
 		key:   key,
 		value: value,
 	}
