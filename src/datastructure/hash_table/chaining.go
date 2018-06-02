@@ -2,7 +2,6 @@ package hash_table
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"reflect"
 
@@ -10,8 +9,6 @@ import (
 )
 
 const defaultMaxSize = 100
-
-var ErrKeyNotExists = errors.New("key not exists")
 
 type hashTableChaining struct {
 	maxSize int
