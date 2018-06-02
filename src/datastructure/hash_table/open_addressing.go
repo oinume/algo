@@ -84,8 +84,9 @@ func (h *openAddressing) Put(key types.Value, value types.Value) (types.Value, e
 	for k := h.table[hashCode].key; !k.isEmpty() && !k.isDeleted(); {
 		if reflect.DeepEqual(givenKey.data, k.data) {
 			// Already exists, replace it with a new value
+			old := h.table[hashCode].value
 			h.put(givenKey, value, hashCode)
-			return h.table[hashCode].value, nil
+			return old, nil
 		}
 		if count+1 > h.maxSize {
 			return nil, ErrHashTableIsFull

@@ -24,13 +24,16 @@ func TestOpenAddressing_Put(t *testing.T) {
 		{
 			key: &types.Object{2}, value: &types.Object{20}, wantReturn: nil,
 		},
+		{
+			key: &types.Object{2}, value: &types.Object{30}, wantReturn: &types.Object{20},
+		},
 	}
 	for _, tc := range testCases {
 		ret, err := hashTable.Put(tc.key, tc.value)
 		r.NoError(err)
 		a.EqualValues(tc.wantReturn, ret)
 	}
-	a.Equal(len(testCases), hashTable.Size())
+	a.Equal(2, hashTable.Size())
 }
 
 func TestOpenAddressing_Get(t *testing.T) {
