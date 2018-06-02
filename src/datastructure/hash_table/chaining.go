@@ -32,7 +32,10 @@ func NewChaining(maxSize int) types.Map {
 	}
 }
 
-func (h *hashTableChaining) Put(key types.Value, value types.Value) types.Value {
+func (h *hashTableChaining) Put(key types.Value, value types.Value) (types.Value, error) {
+	if key == nil {
+		return nil, ErrKeyMustNotBeNil
+	}
 	index := h.getIndex(key)
 	if h.data[index] == nil {
 		// Put as new
@@ -47,13 +50,13 @@ func (h *hashTableChaining) Put(key types.Value, value types.Value) types.Value 
 				// Replace an old item with new one
 				l.Remove(e)
 				l.PushBack(&item{key: key, value: value})
-				return i.value
+				return i.value, nil
 			}
 		}
 		l.PushBack(&item{key: key, value: value})
 		h.size++
 	}
-	return nil
+	return nil, nil
 }
 
 func (h *hashTableChaining) Get(key types.Value) (types.Value, error) {

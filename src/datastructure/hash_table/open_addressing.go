@@ -1,9 +1,8 @@
 package hash_table
 
 import (
-	"reflect"
-
 	"fmt"
+	"reflect"
 
 	"github.com/oinume/algo/src/datastructure/types"
 )
@@ -11,7 +10,7 @@ import (
 const defaultOpenAddressingMaxSize = 53
 
 type (
-	emptyKey   struct{} // TODO: Use this
+	emptyKey   struct{}
 	deletedKey struct{}
 )
 
@@ -34,11 +33,20 @@ func (k *bucketKey) HashCode() int {
 }
 
 func (k *bucketKey) isEmpty() bool {
-	return k.data == nil
+	if k.data == nil {
+		return true
+	}
+	if _, ok := k.data.Get().(emptyKey); ok {
+		return true
+	}
+	return false
 }
 
 func (k *bucketKey) isDeleted() bool {
-	return false // TODO: implement
+	if _, ok := k.data.Get().(deletedKey); ok {
+		return true
+	}
+	return false
 }
 
 type bucket struct {
@@ -46,15 +54,15 @@ type bucket struct {
 	value types.Value
 }
 
-func NewOpenAddresssing() *openAddressing {
+func NewOpenAddressing() types.Map {
 	return NewOpenAddressingWithMaxSize(defaultOpenAddressingMaxSize)
 }
 
-func NewOpenAddressingWithMaxSize(size int) *openAddressing {
+func NewOpenAddressingWithMaxSize(size int) types.Map {
 	table := make([]*bucket, size)
 	for i := 0; i < size; i++ {
 		table[i] = &bucket{
-			key:   &bucketKey{data: nil},
+			key:   &bucketKey{data: &types.Object{Value: emptyKey{}}},
 			value: nil,
 		}
 	}
@@ -65,9 +73,9 @@ func NewOpenAddressingWithMaxSize(size int) *openAddressing {
 	return hashTable
 }
 
-func (h *openAddressing) Put(key types.Value, value types.Value) types.Value {
+func (h *openAddressing) Put(key types.Value, value types.Value) (types.Value, error) {
 	if key == nil {
-		panic("key cannot be nil") // TODO: return error?
+		return nil, ErrKeyMustNotBeNil
 	}
 
 	givenKey := &bucketKey{data: key}
@@ -77,17 +85,17 @@ func (h *openAddressing) Put(key types.Value, value types.Value) types.Value {
 		if reflect.DeepEqual(givenKey.data, k.data) {
 			// Already exists, replace it with a new value
 			h.put(givenKey, value, hashCode)
-			return h.table[hashCode].value
+			return h.table[hashCode].value, nil
 		}
 		if count+1 > h.maxSize {
-			panic("HashTable is full.") // TODO: return error?
+			return nil, ErrHashTableIsFull
 		}
 		hashCode = h.rehash(hashCode)
 		count++
 	}
 	h.put(givenKey, value, hashCode)
 	h.size++
-	return nil
+	return nil, nil
 }
 
 func (h *openAddressing) put(key *bucketKey, value types.Value, hashCode int) {
