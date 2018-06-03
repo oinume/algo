@@ -11,7 +11,7 @@ const defaultOpenAddressingMaxSize = 53
 
 type (
 	emptyKey   struct{}
-	deletedKey struct{}
+	removedKey struct{}
 )
 
 type openAddressing struct {
@@ -42,11 +42,15 @@ func (k *bucketKey) isEmpty() bool {
 	return false
 }
 
-func (k *bucketKey) isDeleted() bool {
-	if _, ok := k.data.Get().(deletedKey); ok {
+func (k *bucketKey) isRemoved() bool {
+	if _, ok := k.data.Get().(removedKey); ok {
 		return true
 	}
 	return false
+}
+
+func (k *bucketKey) setRemoved() {
+	k.data = &types.Object{Value: removedKey{}}
 }
 
 type bucket struct {
@@ -81,7 +85,7 @@ func (h *openAddressing) Put(key types.Value, value types.Value) (types.Value, e
 	givenKey := &bucketKey{data: key}
 	index := h.hash(givenKey)
 	count := 0
-	for k := h.table[index].key; !k.isEmpty() && !k.isDeleted(); k = h.table[index].key {
+	for k := h.table[index].key; !k.isEmpty() && !k.isRemoved(); k = h.table[index].key {
 		if reflect.DeepEqual(givenKey.data, k.data) {
 			// Already exists, replace it with a new value
 			old := h.table[index].value
@@ -111,7 +115,7 @@ func (h *openAddressing) Get(key types.Value) (types.Value, error) {
 	givenKey := &bucketKey{data: key}
 	index := h.hash(givenKey)
 	// わかりにくいので for i := 0; i < h.maxSize; i++ {} にする
-	for k := h.table[index].key; !k.isEmpty() && !k.isDeleted(); k = h.table[index].key {
+	for k := h.table[index].key; !k.isEmpty() && !k.isRemoved(); k = h.table[index].key {
 		if reflect.DeepEqual(givenKey.data, k.data) {
 			// Found
 			return h.table[index].value, nil
@@ -129,8 +133,25 @@ func (h *openAddressing) Size() int {
 	return h.size
 }
 
-func (openAddressing) Remove(key types.Value) (types.Value, error) {
-	panic("implement me")
+func (h *openAddressing) Remove(key types.Value) (types.Value, error) {
+	count := 0
+	givenKey := &bucketKey{data: key}
+	index := h.hash(givenKey)
+	for k := h.table[index].key; !k.isEmpty(); k = h.table[index].key {
+		if reflect.DeepEqual(givenKey.data, k.data) {
+			// Found
+			k.setRemoved()
+			removed := h.table[index].value
+			h.table[index].value = nil
+			return removed, nil
+		}
+		if count+1 > h.maxSize {
+			return nil, ErrKeyNotExists
+		}
+		index = h.rehash(index)
+		count++
+	}
+	return nil, ErrKeyNotExists
 }
 
 func (h *openAddressing) hash(key *bucketKey) int {
