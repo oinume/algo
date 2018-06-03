@@ -59,9 +59,10 @@ func TestOpenAddressing_Put(t *testing.T) {
 }
 
 func TestOpenAddressing_Put_Rehash(t *testing.T) {
+	// TODO: table driven test
 	a := assert.New(t)
 	r := require.New(t)
-	hashTable := NewOpenAddressing()
+	hashTable := NewOpenAddressingWithMaxSize(3)
 
 	ret, err := hashTable.Put(&types.Object{"abc"}, &types.Object{"ABC"})
 	r.NoError(err)
@@ -69,6 +70,14 @@ func TestOpenAddressing_Put_Rehash(t *testing.T) {
 	ret, err = hashTable.Put(&types.Object{"cba"}, &types.Object{"CBA"})
 	r.NoError(err)
 	a.Nil(ret)
+
+	ret, err = hashTable.Get(&types.Object{"abc"})
+	r.NoError(err)
+	a.Equal(&types.Object{"ABC"}, ret)
+
+	ret, err = hashTable.Get(&types.Object{"cba"})
+	r.NoError(err)
+	a.Equal(&types.Object{"CBA"}, ret)
 }
 
 func TestOpenAddressing_Get(t *testing.T) {

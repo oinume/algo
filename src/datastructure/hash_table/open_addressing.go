@@ -79,11 +79,9 @@ func (h *openAddressing) Put(key types.Value, value types.Value) (types.Value, e
 	}
 
 	givenKey := &bucketKey{data: key}
-	//hashCode := givenKey.HashCode()
 	index := h.hash(givenKey)
 	count := 0
-	for k := h.table[index].key; !k.isEmpty() && !k.isDeleted(); {
-		fmt.Printf("key = %v, index = %v\n", key, index)
+	for k := h.table[index].key; !k.isEmpty() && !k.isDeleted(); k = h.table[index].key {
 		if reflect.DeepEqual(givenKey.data, k.data) {
 			// Already exists, replace it with a new value
 			old := h.table[index].value
@@ -111,17 +109,17 @@ func (h *openAddressing) put(key *bucketKey, value types.Value, index int) {
 func (h *openAddressing) Get(key types.Value) (types.Value, error) {
 	count := 0
 	givenKey := &bucketKey{data: key}
-	hashCode := givenKey.HashCode()
+	index := h.hash(givenKey)
 	// わかりにくいので for i := 0; i < h.maxSize; i++ {} にする
-	for k := h.table[hashCode].key; !k.isEmpty() && !k.isDeleted(); {
+	for k := h.table[index].key; !k.isEmpty() && !k.isDeleted(); k = h.table[index].key {
 		if reflect.DeepEqual(givenKey.data, k.data) {
 			// Found
-			return h.table[hashCode].value, nil
+			return h.table[index].value, nil
 		}
 		if count+1 > h.maxSize {
 			return nil, ErrKeyNotExists
 		}
-		hashCode = h.rehash(hashCode)
+		index = h.rehash(index)
 		count++
 	}
 	return nil, ErrKeyNotExists
