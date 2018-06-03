@@ -10,7 +10,7 @@ import (
 
 const defaultMaxSize = 100
 
-type hashTableChaining struct {
+type chaining struct {
 	maxSize int
 	size    int
 	data    []*list.List
@@ -25,14 +25,14 @@ func NewChaining(maxSize int) types.Map {
 	if maxSize <= 0 {
 		maxSize = defaultMaxSize
 	}
-	return &hashTableChaining{
+	return &chaining{
 		maxSize: maxSize,
 		size:    0,
 		data:    make([]*list.List, maxSize),
 	}
 }
 
-func (h *hashTableChaining) Put(key types.Value, value types.Value) (types.Value, error) {
+func (h *chaining) Put(key types.Value, value types.Value) (types.Value, error) {
 	if key == nil {
 		return nil, ErrKeyMustNotBeNil
 	}
@@ -59,7 +59,7 @@ func (h *hashTableChaining) Put(key types.Value, value types.Value) (types.Value
 	return nil, nil
 }
 
-func (h *hashTableChaining) Get(key types.Value) (types.Value, error) {
+func (h *chaining) Get(key types.Value) (types.Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
 		return nil, ErrKeyNotExists
@@ -73,7 +73,7 @@ func (h *hashTableChaining) Get(key types.Value) (types.Value, error) {
 	return nil, ErrKeyNotExists
 }
 
-func (h *hashTableChaining) Remove(key types.Value) (types.Value, error) {
+func (h *chaining) Remove(key types.Value) (types.Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
 		return nil, ErrKeyNotExists
@@ -89,11 +89,11 @@ func (h *hashTableChaining) Remove(key types.Value) (types.Value, error) {
 	return nil, ErrKeyNotExists
 }
 
-func (h *hashTableChaining) Size() int {
+func (h *chaining) Size() int {
 	return h.size
 }
 
-func (h *hashTableChaining) calculateHashCode(v types.Value) int {
+func (h *chaining) calculateHashCode(v types.Value) int {
 	result := 0
 	for _, s := range fmt.Sprint(v) {
 		result += int(s)
@@ -101,7 +101,7 @@ func (h *hashTableChaining) calculateHashCode(v types.Value) int {
 	return result
 }
 
-func (h *hashTableChaining) getIndex(key types.Value) int {
+func (h *chaining) getIndex(key types.Value) int {
 	k, ok := key.(types.Hashable)
 	var hashCode int
 	if ok {
@@ -113,7 +113,7 @@ func (h *hashTableChaining) getIndex(key types.Value) int {
 }
 
 // TODO: Replace getIndex by this
-func (h *hashTableChaining) find(key types.Value) (*list.List, error) {
+func (h *chaining) find(key types.Value) (*list.List, error) {
 	k, ok := key.(types.Hashable)
 	var hashCode int
 	if ok {
