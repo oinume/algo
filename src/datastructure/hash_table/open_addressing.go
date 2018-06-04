@@ -143,6 +143,7 @@ func (h *openAddressing) Remove(key types.Value) (types.Value, error) {
 			k.setRemoved()
 			removed := h.table[index].value
 			h.table[index].value = nil
+			h.size--
 			return removed, nil
 		}
 		if count+1 > h.maxSize {

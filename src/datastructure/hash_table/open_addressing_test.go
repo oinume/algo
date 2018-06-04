@@ -99,3 +99,34 @@ func TestOpenAddressing_Get(t *testing.T) {
 		a.Equal(tc.value, actual)
 	}
 }
+
+func TestOpenAddressing_Remove(t *testing.T) {
+	a := assert.New(t)
+	r := require.New(t)
+	hashTable := NewOpenAddressing()
+
+	testCases := []struct {
+		key types.Value
+		value types.Value
+		remove bool
+	}{
+		{key: &types.Object{"abc"}, value:&types.Object{"ABC"}, remove: true},
+		{key: &types.Object{"cba"}, value:&types.Object{"CBA"}, remove: false},
+	}
+	for _, tc := range testCases {
+		_, err := hashTable.Put(tc.key, tc.value)
+		r.NoError(err)
+	}
+	size := hashTable.Size()
+	r.Equal(len(testCases), size)
+
+	for _, tc := range testCases {
+		if tc.remove {
+			removed, err := hashTable.Remove(tc.key)
+			r.NoError(err)
+			a.Equal(tc.value, removed)
+			size--
+		}
+	}
+	r.Equal(size, hashTable.Size(), "Size() must be decremented by removal")
+}
