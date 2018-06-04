@@ -62,7 +62,7 @@ func (h *chaining) Put(key types.Value, value types.Value) (types.Value, error) 
 func (h *chaining) Get(key types.Value) (types.Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
-		return nil, ErrKeyNotExists
+		return nil, ErrNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
@@ -70,13 +70,13 @@ func (h *chaining) Get(key types.Value) (types.Value, error) {
 			return i.value, nil
 		}
 	}
-	return nil, ErrKeyNotExists
+	return nil, ErrNotExists
 }
 
 func (h *chaining) Remove(key types.Value) (types.Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
-		return nil, ErrKeyNotExists
+		return nil, ErrNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
@@ -86,7 +86,7 @@ func (h *chaining) Remove(key types.Value) (types.Value, error) {
 			return removed.(*item).value, nil
 		}
 	}
-	return nil, ErrKeyNotExists
+	return nil, ErrNotExists
 }
 
 func (h *chaining) Size() int {
@@ -124,7 +124,7 @@ func (h *chaining) find(key types.Value) (*list.List, error) {
 	index := hashCode % h.maxSize
 	l := h.data[index]
 	if l == nil {
-		return nil, ErrKeyNotExists
+		return nil, ErrNotExists
 	}
 	return l, nil
 }

@@ -121,12 +121,12 @@ func (h *openAddressing) Get(key types.Value) (types.Value, error) {
 			return h.table[index].value, nil
 		}
 		if count+1 > h.maxSize {
-			return nil, ErrKeyNotExists
+			return nil, ErrNotExists
 		}
 		index = h.rehash(index)
 		count++
 	}
-	return nil, ErrKeyNotExists
+	return nil, ErrNotExists
 }
 
 func (h *openAddressing) Size() int {
@@ -147,12 +147,12 @@ func (h *openAddressing) Remove(key types.Value) (types.Value, error) {
 			return removed, nil
 		}
 		if count+1 > h.maxSize {
-			return nil, ErrKeyNotExists
+			return nil, ErrNotExists
 		}
 		index = h.rehash(index)
 		count++
 	}
-	return nil, ErrKeyNotExists
+	return nil, ErrNotExists
 }
 
 func (h *openAddressing) hash(key *bucketKey) int {
