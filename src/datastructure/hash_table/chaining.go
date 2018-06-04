@@ -2,7 +2,6 @@ package hash_table
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"reflect"
 
@@ -11,9 +10,7 @@ import (
 
 const defaultMaxSize = 100
 
-var ErrKeyNotExists = errors.New("key not exists")
-
-type hashTableChaining struct {
+type chaining struct {
 	maxSize int
 	size    int
 	data    []*list.List
@@ -28,14 +25,17 @@ func NewChaining(maxSize int) types.Map {
 	if maxSize <= 0 {
 		maxSize = defaultMaxSize
 	}
-	return &hashTableChaining{
+	return &chaining{
 		maxSize: maxSize,
 		size:    0,
 		data:    make([]*list.List, maxSize),
 	}
 }
 
-func (h *hashTableChaining) Put(key types.Value, value types.Value) types.Value {
+func (h *chaining) Put(key types.Value, value types.Value) (types.Value, error) {
+	if key == nil {
+		return nil, ErrKeyMustNotBeNil
+	}
 	index := h.getIndex(key)
 	if h.data[index] == nil {
 		// Put as new
@@ -50,19 +50,19 @@ func (h *hashTableChaining) Put(key types.Value, value types.Value) types.Value 
 				// Replace an old item with new one
 				l.Remove(e)
 				l.PushBack(&item{key: key, value: value})
-				return i.value
+				return i.value, nil
 			}
 		}
 		l.PushBack(&item{key: key, value: value})
 		h.size++
 	}
-	return nil
+	return nil, nil
 }
 
-func (h *hashTableChaining) Get(key types.Value) (types.Value, error) {
+func (h *chaining) Get(key types.Value) (types.Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
-		return nil, ErrKeyNotExists
+		return nil, ErrNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
@@ -70,13 +70,13 @@ func (h *hashTableChaining) Get(key types.Value) (types.Value, error) {
 			return i.value, nil
 		}
 	}
-	return nil, ErrKeyNotExists
+	return nil, ErrNotExists
 }
 
-func (h *hashTableChaining) Remove(key types.Value) (types.Value, error) {
+func (h *chaining) Remove(key types.Value) (types.Value, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
-		return nil, ErrKeyNotExists
+		return nil, ErrNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
@@ -86,14 +86,14 @@ func (h *hashTableChaining) Remove(key types.Value) (types.Value, error) {
 			return removed.(*item).value, nil
 		}
 	}
-	return nil, ErrKeyNotExists
+	return nil, ErrNotExists
 }
 
-func (h *hashTableChaining) Size() int {
+func (h *chaining) Size() int {
 	return h.size
 }
 
-func (h *hashTableChaining) calculateHashCode(v types.Value) int {
+func (h *chaining) calculateHashCode(v types.Value) int {
 	result := 0
 	for _, s := range fmt.Sprint(v) {
 		result += int(s)
@@ -101,7 +101,7 @@ func (h *hashTableChaining) calculateHashCode(v types.Value) int {
 	return result
 }
 
-func (h *hashTableChaining) getIndex(key types.Value) int {
+func (h *chaining) getIndex(key types.Value) int {
 	k, ok := key.(types.Hashable)
 	var hashCode int
 	if ok {
@@ -113,7 +113,7 @@ func (h *hashTableChaining) getIndex(key types.Value) int {
 }
 
 // TODO: Replace getIndex by this
-func (h *hashTableChaining) find(key types.Value) (*list.List, error) {
+func (h *chaining) find(key types.Value) (*list.List, error) {
 	k, ok := key.(types.Hashable)
 	var hashCode int
 	if ok {
@@ -124,7 +124,7 @@ func (h *hashTableChaining) find(key types.Value) (*list.List, error) {
 	index := hashCode % h.maxSize
 	l := h.data[index]
 	if l == nil {
-		return nil, ErrKeyNotExists
+		return nil, ErrNotExists
 	}
 	return l, nil
 }
