@@ -3,7 +3,6 @@ package stack
 import (
 	"testing"
 
-	"github.com/oinume/algo/src/datastructure/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,7 +20,7 @@ func TestStackPop(t *testing.T) {
 	poped, err := stack.Pop()
 	assert.Nil(err)
 	assert.Equal(2, stack.Size())
-	assert.Equal(&types.Object{Value: 3}, poped)
+	assert.Equal(3, poped)
 
 	stack.Clear()
 	assert.Equal(0, stack.Size())
@@ -31,8 +30,8 @@ func TestStackPop(t *testing.T) {
 
 func createStack(capacity int) *Stack {
 	stack := NewStack(capacity)
-	stack.Push(&types.Object{Value: 1})
-	stack.Push(&types.Object{Value: 2})
-	stack.Push(&types.Object{Value: 3})
+	stack.Push(1)
+	stack.Push(2)
+	stack.Push(3)
 	return stack
 }

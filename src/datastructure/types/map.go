@@ -1,10 +1,10 @@
 package types
 
 type Map interface {
-	Put(key Value, value Value) (Value, error)
-	Get(key Value) (Value, error)
+	Put(key interface{}, value interface{}) (interface{}, error)
+	Get(key interface{}) (interface{}, error)
 	Size() int
-	Remove(key Value) (Value, error)
+	Remove(key interface{}) (interface{}, error)
 }
 
 type Hashable interface {

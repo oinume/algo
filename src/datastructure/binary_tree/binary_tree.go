@@ -1,12 +1,10 @@
 package binary_tree
 
-import "github.com/oinume/algo/src/datastructure/types"
-
 // Binary tree node
 // Left: left child
 // Right: right child
 type BinaryTreeNode struct {
-	Value types.Value
+	Value interface{}
 	Left  *BinaryTreeNode
 	Right *BinaryTreeNode
 }

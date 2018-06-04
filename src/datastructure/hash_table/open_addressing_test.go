@@ -3,7 +3,6 @@ package hash_table
 import (
 	"testing"
 
-	"github.com/oinume/algo/src/datastructure/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -11,20 +10,20 @@ import (
 func TestBucketKey_IsEmpty(t *testing.T) {
 	a := assert.New(t)
 
-	empty := &bucketKey{data: &types.Object{Value: emptyKey{}}}
+	empty := &bucketKey{data: emptyKey{}}
 	a.True(empty.isEmpty())
 }
 
 func TestBucketKey_HashCode(t *testing.T) {
 	a := assert.New(t)
 	testCases := []struct {
-		key1         types.Value
-		key2         types.Value
+		key1         interface{}
+		key2         interface{}
 		sameHashCode bool
 	}{
-		{key1: &types.Object{1}, key2: &types.Object{1}, sameHashCode: true},
-		{key1: &types.Object{"a"}, key2: &types.Object{"b"}, sameHashCode: false},
-		{key1: &types.Object{"abc"}, key2: &types.Object{"cba"}, sameHashCode: true},
+		{key1: 1, key2: 1, sameHashCode: true},
+		{key1: "a", key2: "b", sameHashCode: false},
+		{key1: "abc", key2: "cba", sameHashCode: true},
 	}
 	for _, tc := range testCases {
 		key1, key2 := &bucketKey{data: tc.key1}, &bucketKey{data: tc.key2}
@@ -42,13 +41,13 @@ func TestOpenAddressing_Put(t *testing.T) {
 	hashTable := NewOpenAddressing()
 
 	testCases := []struct {
-		key        types.Value
-		value      types.Value
-		wantReturn types.Value
+		key        interface{}
+		value      interface{}
+		wantReturn interface{}
 	}{
-		{key: &types.Object{1}, value: &types.Object{10}, wantReturn: nil},
-		{key: &types.Object{2}, value: &types.Object{20}, wantReturn: nil},
-		{key: &types.Object{2}, value: &types.Object{30}, wantReturn: &types.Object{20}},
+		{key: 1, value: 10, wantReturn: nil},
+		{key: 2, value: 20, wantReturn: nil},
+		{key: 2, value: 30, wantReturn: 20},
 	}
 	for _, tc := range testCases {
 		ret, err := hashTable.Put(tc.key, tc.value)
@@ -64,20 +63,20 @@ func TestOpenAddressing_Put_Rehash(t *testing.T) {
 	r := require.New(t)
 	hashTable := NewOpenAddressingWithMaxSize(3)
 
-	ret, err := hashTable.Put(&types.Object{"abc"}, &types.Object{"ABC"})
+	ret, err := hashTable.Put("abc", "ABC")
 	r.NoError(err)
 	a.Nil(ret)
-	ret, err = hashTable.Put(&types.Object{"cba"}, &types.Object{"CBA"})
+	ret, err = hashTable.Put("cba", "CBA")
 	r.NoError(err)
 	a.Nil(ret)
 
-	ret, err = hashTable.Get(&types.Object{"abc"})
+	ret, err = hashTable.Get("abc")
 	r.NoError(err)
-	a.Equal(&types.Object{"ABC"}, ret)
+	a.Equal("ABC", ret)
 
-	ret, err = hashTable.Get(&types.Object{"cba"})
+	ret, err = hashTable.Get("cba")
 	r.NoError(err)
-	a.Equal(&types.Object{"CBA"}, ret)
+	a.Equal("CBA", ret)
 }
 
 func TestOpenAddressing_Get(t *testing.T) {
@@ -86,11 +85,11 @@ func TestOpenAddressing_Get(t *testing.T) {
 	hashTable := NewOpenAddressing()
 
 	testCases := []struct {
-		key   types.Value
-		value types.Value
+		key   interface{}
+		value interface{}
 	}{
-		{key: &types.Object{1}, value: &types.Object{10}},
-		{key: &types.Object{2}, value: &types.Object{20}},
+		{key: 1, value: 10},
+		{key: 2, value: 20},
 	}
 	for _, tc := range testCases {
 		_, err := hashTable.Put(tc.key, tc.value)
@@ -106,12 +105,12 @@ func TestOpenAddressing_Remove(t *testing.T) {
 	hashTable := NewOpenAddressing()
 
 	testCases := []struct {
-		key types.Value
-		value types.Value
+		key interface{}
+		value interface{}
 		remove bool
 	}{
-		{key: &types.Object{"abc"}, value:&types.Object{"ABC"}, remove: true},
-		{key: &types.Object{"cba"}, value:&types.Object{"CBA"}, remove: false},
+		{key: "abc", value: "ABC", remove: true},
+		{key: "cba", value: "CBA", remove: false},
 	}
 	for _, tc := range testCases {
 		_, err := hashTable.Put(tc.key, tc.value)
