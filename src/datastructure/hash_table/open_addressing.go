@@ -21,7 +21,7 @@ type openAddressing struct {
 }
 
 type bucketKey struct {
-	data types.Value
+	data interface{}
 }
 
 func (k *bucketKey) HashCode() int {
@@ -36,26 +36,26 @@ func (k *bucketKey) isEmpty() bool {
 	if k.data == nil {
 		return true
 	}
-	if _, ok := k.data.Get().(emptyKey); ok {
+	if _, ok := k.data.(emptyKey); ok {
 		return true
 	}
 	return false
 }
 
 func (k *bucketKey) isRemoved() bool {
-	if _, ok := k.data.Get().(removedKey); ok {
+	if _, ok := k.data.(removedKey); ok {
 		return true
 	}
 	return false
 }
 
 func (k *bucketKey) setRemoved() {
-	k.data = &types.Object{Value: removedKey{}}
+	k.data = removedKey{}
 }
 
 type bucket struct {
 	key   *bucketKey
-	value types.Value
+	value interface{}
 }
 
 func NewOpenAddressing() types.Map {
@@ -66,7 +66,7 @@ func NewOpenAddressingWithMaxSize(size int) types.Map {
 	table := make([]*bucket, size)
 	for i := 0; i < size; i++ {
 		table[i] = &bucket{
-			key:   &bucketKey{data: &types.Object{Value: emptyKey{}}},
+			key:   &bucketKey{data: emptyKey{}},
 			value: nil,
 		}
 	}
@@ -77,7 +77,7 @@ func NewOpenAddressingWithMaxSize(size int) types.Map {
 	return hashTable
 }
 
-func (h *openAddressing) Put(key types.Value, value types.Value) (types.Value, error) {
+func (h *openAddressing) Put(key interface{}, value interface{}) (interface{}, error) {
 	if key == nil {
 		return nil, ErrKeyMustNotBeNil
 	}
@@ -103,14 +103,14 @@ func (h *openAddressing) Put(key types.Value, value types.Value) (types.Value, e
 	return nil, nil
 }
 
-func (h *openAddressing) put(key *bucketKey, value types.Value, index int) {
+func (h *openAddressing) put(key *bucketKey, value interface{}, index int) {
 	h.table[index] = &bucket{
 		key:   key,
 		value: value,
 	}
 }
 
-func (h *openAddressing) Get(key types.Value) (types.Value, error) {
+func (h *openAddressing) Get(key interface{}) (interface{}, error) {
 	count := 0
 	givenKey := &bucketKey{data: key}
 	index := h.hash(givenKey)
@@ -133,7 +133,7 @@ func (h *openAddressing) Size() int {
 	return h.size
 }
 
-func (h *openAddressing) Remove(key types.Value) (types.Value, error) {
+func (h *openAddressing) Remove(key interface{}) (interface{}, error) {
 	count := 0
 	givenKey := &bucketKey{data: key}
 	index := h.hash(givenKey)

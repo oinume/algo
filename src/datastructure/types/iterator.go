@@ -1,7 +1,7 @@
 package types
 
 type Iterator interface {
-	Next() (Value, error)
+	Next() (interface{}, error)
 	HasNext() bool
-	Remove() (Value, error)
+	Remove() (interface{}, error)
 }

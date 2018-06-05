@@ -7,7 +7,7 @@ import (
 )
 
 type element struct {
-	data types.Value
+	data interface{}
 	next *element
 }
 
@@ -32,7 +32,7 @@ func NewLinkedList() types.List {
 	}
 }
 
-func (l *linkedList) Add(v types.Value) {
+func (l *linkedList) Add(v interface{}) {
 	last := l.head
 	for e := l.head.next; e != nil; e = e.next {
 		last = e
@@ -40,7 +40,7 @@ func (l *linkedList) Add(v types.Value) {
 	last.next = &element{data: v, next: nil}
 }
 
-func (l *linkedList) Insert(index int, v types.Value) {
+func (l *linkedList) Insert(index int, v interface{}) {
 	current := 0
 	for e := l.head.next; e != nil; e = e.next {
 		if current == index {
@@ -61,7 +61,7 @@ func (l *linkedList) Size() int {
 	return size
 }
 
-func (l *linkedList) Set(index int, v types.Value) (types.Value, error) {
+func (l *linkedList) Set(index int, v interface{}) (interface{}, error) {
 	if index >= l.Size() {
 		return nil, types.ErrorIndexOutOfRange
 	}
@@ -86,7 +86,7 @@ func (l *linkedList) Set(index int, v types.Value) (types.Value, error) {
 	return oldValue, nil
 }
 
-func (l *linkedList) Remove(v types.Value) bool {
+func (l *linkedList) Remove(v interface{}) bool {
 	prev := l.head
 	var target *element = nil
 	for e := l.head; e != nil; e = e.next {
@@ -108,7 +108,7 @@ func (l *linkedList) Remove(v types.Value) bool {
 	return true
 }
 
-func (l *linkedList) First() (types.Value, error) {
+func (l *linkedList) First() (interface{}, error) {
 	if l.head.next != nil {
 		return l.head.next.data, nil
 	}
@@ -126,7 +126,7 @@ type linkedListIterator struct {
 	cursor *element
 }
 
-func (i *linkedListIterator) Next() (types.Value, error) {
+func (i *linkedListIterator) Next() (interface{}, error) {
 	if i.HasNext() {
 		data := i.cursor.next.data
 		i.cursor = i.cursor.next
@@ -140,7 +140,7 @@ func (i *linkedListIterator) HasNext() bool {
 	return i.cursor.next != nil
 }
 
-func (i *linkedListIterator) Remove() (types.Value, error) {
+func (i *linkedListIterator) Remove() (interface{}, error) {
 	data := i.cursor.data
 	if data == nil {
 		return nil, fmt.Errorf("No current object")

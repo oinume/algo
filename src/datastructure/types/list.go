@@ -4,14 +4,14 @@ import "fmt"
 
 type List interface {
 	// Add o as last into this list
-	Add(v Value)
+	Add(v interface{})
 	// Insert o after the position of index
-	Insert(index int, v Value)
+	Insert(index int, v interface{})
 	// Get size
 	Size() int
 	// Remove given v
-	Remove(v Value) bool
-	Set(index int, v Value) (Value, error)
+	Remove(v interface{}) bool
+	Set(index int, v interface{}) (interface{}, error)
 	Iterator() Iterator
 }
 

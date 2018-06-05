@@ -17,8 +17,8 @@ type chaining struct {
 }
 
 type item struct {
-	key   types.Value
-	value types.Value
+	key   interface{}
+	value interface{}
 }
 
 func NewChaining(maxSize int) types.Map {
@@ -32,7 +32,7 @@ func NewChaining(maxSize int) types.Map {
 	}
 }
 
-func (h *chaining) Put(key types.Value, value types.Value) (types.Value, error) {
+func (h *chaining) Put(key interface{}, value interface{}) (interface{}, error) {
 	if key == nil {
 		return nil, ErrKeyMustNotBeNil
 	}
@@ -46,7 +46,7 @@ func (h *chaining) Put(key types.Value, value types.Value) (types.Value, error) 
 	} else {
 		l := h.data[index]
 		for e := l.Front(); e != nil; e = e.Next() {
-			if i := e.Value.(*item); reflect.DeepEqual(i.key.Get(), key.Get()) {
+			if i := e.Value.(*item); reflect.DeepEqual(i.key, key) {
 				// Replace an old item with new one
 				l.Remove(e)
 				l.PushBack(&item{key: key, value: value})
@@ -59,28 +59,28 @@ func (h *chaining) Put(key types.Value, value types.Value) (types.Value, error) 
 	return nil, nil
 }
 
-func (h *chaining) Get(key types.Value) (types.Value, error) {
+func (h *chaining) Get(key interface{}) (interface{}, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
 		return nil, ErrNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
-		if i := e.Value.(*item); i.key.Get() == key.Get() {
+		if i := e.Value.(*item); i.key == key {
 			return i.value, nil
 		}
 	}
 	return nil, ErrNotExists
 }
 
-func (h *chaining) Remove(key types.Value) (types.Value, error) {
+func (h *chaining) Remove(key interface{}) (interface{}, error) {
 	index := h.getIndex(key)
 	if h.data[index] == nil {
 		return nil, ErrNotExists
 	}
 	list := h.data[index]
 	for e := list.Front(); e != nil; e = e.Next() {
-		if i := e.Value.(*item); i.key.Get() == key.Get() {
+		if i := e.Value.(*item); i.key == key {
 			removed := list.Remove(e)
 			h.size--
 			return removed.(*item).value, nil
@@ -93,7 +93,7 @@ func (h *chaining) Size() int {
 	return h.size
 }
 
-func (h *chaining) calculateHashCode(v types.Value) int {
+func (h *chaining) calculateHashCode(v interface{}) int {
 	result := 0
 	for _, s := range fmt.Sprint(v) {
 		result += int(s)
@@ -101,7 +101,7 @@ func (h *chaining) calculateHashCode(v types.Value) int {
 	return result
 }
 
-func (h *chaining) getIndex(key types.Value) int {
+func (h *chaining) getIndex(key interface{}) int {
 	k, ok := key.(types.Hashable)
 	var hashCode int
 	if ok {
@@ -113,7 +113,7 @@ func (h *chaining) getIndex(key types.Value) int {
 }
 
 // TODO: Replace getIndex by this
-func (h *chaining) find(key types.Value) (*list.List, error) {
+func (h *chaining) find(key interface{}) (*list.List, error) {
 	k, ok := key.(types.Hashable)
 	var hashCode int
 	if ok {
