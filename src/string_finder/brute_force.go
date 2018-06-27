@@ -14,11 +14,11 @@ func (bf *BruteForce) Find(text, pattern string) int {
 	for textPos, patternPos = 0, 0; textPos < len(textRunes) && patternPos < len(patternRunes); {
 		// Compare text and pattern char
 		if textRunes[textPos] == patternRunes[patternPos] {
+			// Match
 			textPos++
 			patternPos++
 		} else {
-			// Not matched
-			//
+			// Not match
 			textPos = textPos - patternPos + 1 // Make textPos advance with 1 step
 			patternPos = 0                     // Reset pattern position
 		}

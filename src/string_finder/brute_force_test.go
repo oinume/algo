@@ -1,8 +1,13 @@
 package string_finder
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestBruteForce_Find(t *testing.T) {
+	a := assert.New(t)
 	testCases := []struct {
 		text       string
 		pattern    string
@@ -16,8 +21,6 @@ func TestBruteForce_Find(t *testing.T) {
 	bf := NewBruteForce()
 	for _, tc := range testCases {
 		got := bf.Find(tc.text, tc.pattern)
-		if tc.wantResult != got {
-			t.Errorf("text=%v, pattern=%v: want=%v, got=%v", tc.text, tc.pattern, tc.wantResult, got)
-		}
+		a.Equalf(tc.wantResult, got, "text=%v, pattern=%v", tc.text, tc.pattern)
 	}
 }
