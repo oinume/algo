@@ -3,7 +3,7 @@ package string_finder
 type BruteForce struct {
 }
 
-func NewBruteForce() *BruteForce {
+func NewBruteForce() Finder {
 	return &BruteForce{}
 }
 
