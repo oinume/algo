@@ -1,15 +1,20 @@
 package string_finder
 
 type BruteForce struct {
+	pattern string
 }
 
 func NewBruteForce() Finder {
 	return &BruteForce{}
 }
 
-func (bf *BruteForce) Find(text, pattern string) int {
+func (bf *BruteForce) Initialize(pattern string) {
+	bf.pattern = pattern
+}
+
+func (bf *BruteForce) Find(text string) int {
 	textRunes := []rune(text)
-	patternRunes := []rune(pattern)
+	patternRunes := []rune(bf.pattern)
 	var textPos, patternPos int
 	for textPos, patternPos = 0, 0; textPos < len(textRunes) && patternPos < len(patternRunes); {
 		// Compare text and pattern char
