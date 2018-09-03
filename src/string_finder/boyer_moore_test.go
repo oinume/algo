@@ -13,9 +13,9 @@ func TestBoyerMoore_Find(t *testing.T) {
 		pattern    string
 		wantResult int
 	}{
-		{text: "AAAXABAABBCAC", pattern: "ABBC", wantResult: 2},
-		//{text: "a", pattern: "cd", wantResult: -1},
-		//{text: "日本語", pattern: "日本", wantResult: 0},
+		{text: "AAAXABAABBCAC", pattern: "ABBC", wantResult: 7},
+		{text: "abcd", pattern: "kcd", wantResult: -1},
+		{text: "こんにちは", pattern: "にちは", wantResult: 2},
 	}
 
 	for _, tc := range testCases {
