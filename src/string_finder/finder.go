@@ -1,5 +1,6 @@
 package string_finder
 
 type Finder interface {
-	Find(text, pattern string) int
+	Initialize(pattern string) Finder
+	Find(text string) int
 }

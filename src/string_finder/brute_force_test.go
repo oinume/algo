@@ -18,9 +18,8 @@ func TestBruteForce_Find(t *testing.T) {
 		{text: "日本語", pattern: "日本", wantResult: 0},
 	}
 
-	bf := NewBruteForce()
 	for _, tc := range testCases {
-		got := bf.Find(tc.text, tc.pattern)
+		got := NewBruteForce().Initialize(tc.pattern).Find(tc.text)
 		a.Equalf(tc.wantResult, got, "text=%v, pattern=%v", tc.text, tc.pattern)
 	}
 }
