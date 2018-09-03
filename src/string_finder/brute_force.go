@@ -8,8 +8,9 @@ func NewBruteForce() Finder {
 	return &BruteForce{}
 }
 
-func (bf *BruteForce) Initialize(pattern string) {
+func (bf *BruteForce) Initialize(pattern string) Finder {
 	bf.pattern = pattern
+	return bf
 }
 
 func (bf *BruteForce) Find(text string) int {

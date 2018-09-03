@@ -15,9 +15,10 @@ func NewBoyerMoore() Finder {
 	return &BoyerMoore{}
 }
 
-func (bm *BoyerMoore) Initialize(pattern string) {
+func (bm *BoyerMoore) Initialize(pattern string) Finder {
 	bm.pattern = pattern
 	bm.shiftTable = bm.createShiftTable(pattern)
+	return bm
 }
 
 func (bm *BoyerMoore) Find(text string) int {
