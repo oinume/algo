@@ -24,6 +24,10 @@ func (n *Node) Value() int64 {
 	return n.value
 }
 
+func (n *Node) IsEqual(other *Node) bool {
+	return n.Value() == other.Value()
+}
+
 type Tree struct {
 	root *Node
 }
@@ -44,7 +48,7 @@ func (t *Tree) Root() *Node {
 
 1. n.Value():5 > target:4 -> leftへ行く
 2. n.Value():3 < target:4 -> rightがnil。insertToLeft=falseでforループを終了
-3. 挿入処理: insertToLeft=falseなのでnewNodeをparent.rightに挿入
+3. 挿入処理: parent=3, insertToLeft=falseなのでnewNodeをparent.rightに挿入
 */
 func (t *Tree) Insert(target int64) (*Node, error) {
 	//n := t.Root()
@@ -76,6 +80,11 @@ func (t *Tree) Insert(target int64) (*Node, error) {
 		parent.right = newNode
 	}
 	return newNode, nil
+}
+
+func (t *Tree) IsEqual(other *Tree) bool {
+	// TODO: implement
+	return true
 }
 
 var ErrAlreadyExists = fmt.Errorf("already exists in this tree")
