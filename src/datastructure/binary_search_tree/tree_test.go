@@ -108,3 +108,13 @@ func TestTree_Insert(t *testing.T) {
 		a.Equal(test.wantTreeFunc(), tree)
 	}
 }
+
+func TestTree_Insert_Exist(t *testing.T) {
+	r := require.New(t)
+	tree := New(NewNode(5))
+	tree.root.left = NewNode(3)
+	tree.root.right = NewNode(6)
+
+	_, err := tree.Insert(6)
+	r.Equal(ErrAlreadyExists, err)
+}
