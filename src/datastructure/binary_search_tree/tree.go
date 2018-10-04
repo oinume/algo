@@ -40,6 +40,21 @@ func (t *Tree) Root() *Node {
 	return t.root
 }
 
+func (t *Tree) Find(target int64) (*Node, error) {
+	for n := t.Root(); n != nil; {
+		v := n.Value()
+		if v == target {
+			return n, nil
+		}
+		if v > target {
+			n = n.Left()
+		} else {
+			n = n.Right()
+		}
+	}
+	return nil, ErrNotFound
+}
+
 /*
      5
    3   6
@@ -87,4 +102,7 @@ func (t *Tree) IsEqual(other *Tree) bool {
 	return true
 }
 
-var ErrAlreadyExists = fmt.Errorf("already exists in this tree")
+var (
+	ErrAlreadyExists = fmt.Errorf("already exists in this tree")
+	ErrNotFound      = fmt.Errorf("not found in this tree")
+)

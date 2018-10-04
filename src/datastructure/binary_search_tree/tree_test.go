@@ -15,6 +15,36 @@ func TestNew(t *testing.T) {
 	a.Equal(tree.Root(), root)
 }
 
+func TestTree_Find(t *testing.T) {
+	a := assert.New(t)
+	r := require.New(t)
+
+	tree := New(NewNode(5))
+	left := NewNode(3)
+	tree.root.left = left
+	left.right = NewNode(4)
+	tree.root.right = NewNode(6)
+
+	t.Run("normal", func(t *testing.T) {
+		tests := []struct {
+			input int64
+			want  *Node
+		}{
+			{input: 4, want: NewNode(4)},
+		}
+		for _, test := range tests {
+			got, err := tree.Find(test.input)
+			r.NoError(err)
+			a.Equal(test.want, got)
+		}
+	})
+
+	t.Run("not found", func(t *testing.T) {
+		_, err := tree.Find(100)
+		r.Equal(ErrNotFound, err)
+	})
+}
+
 func TestTree_Insert(t *testing.T) {
 	a := assert.New(t)
 	r := require.New(t)
