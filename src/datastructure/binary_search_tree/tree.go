@@ -70,7 +70,6 @@ func (t *Tree) Find(target int64) (*Node, error) {
 3. 挿入処理: parent=3, insertToLeft=falseなのでnewNodeをparent.rightに挿入
 */
 func (t *Tree) Insert(target int64) (*Node, error) {
-	//n := t.Root()
 	var parent *Node
 	insertToLeft := false
 	for n := t.Root(); n != nil; {
@@ -99,6 +98,83 @@ func (t *Tree) Insert(target int64) (*Node, error) {
 		parent.right = newNode
 	}
 	return newNode, nil
+}
+
+func (t *Tree) Remove(target int64) (*Node, error) {
+	var parent *Node
+	isLeftChild := false // The current node is left child of parent
+	for n := t.root; n != nil; {
+		if n.Value() == target { // Found
+			if n.IsLeaf() { // The node is a leaf, just remove the node itself
+				if parent == nil {
+					t.root = nil
+				} else if isLeftChild {
+					parent.left = nil
+				} else {
+					parent.right = nil
+				}
+			} else if n.left == nil {
+				// The node has only right child so replace this node with the right child
+				if parent == nil {
+					t.root = n.Right()
+				} else if isLeftChild {
+					parent.left = n.Right()
+				} else {
+					parent.right = n.Right()
+				}
+			} else if n.right == nil {
+				if parent == nil {
+					t.root = n.Left()
+				} else if isLeftChild {
+					parent.left = n.Left()
+				} else {
+					parent.right = n.Left()
+				}
+			} else {
+				// Remove smallest value node in right subtree
+				smallest := t.removeSmallestNode(n, n.Right())
+				// Replace current node with the smallest node
+				if parent == nil {
+					t.root = smallest
+				} else if isLeftChild {
+					parent.left = smallest
+				} else {
+					parent.right = smallest
+				}
+				smallest.left = n.Left()
+				smallest.right = n.Right()
+			}
+			// Successfully removed
+			return n, nil
+		} else if n.Value() > target {
+			// Go to left child
+			parent = n
+			isLeftChild = true
+			n = n.Left()
+		} else {
+			// Go to right child
+			parent = n
+			isLeftChild = false
+			n = n.Right()
+		}
+	}
+	return nil, ErrNotFound
+}
+
+func (t *Tree) removeSmallestNode(parent *Node, current *Node) *Node {
+	isLeftChild := false
+	for current.Left() != nil {
+		parent = current
+		isLeftChild = true
+		current = current.Left()
+	}
+
+	if isLeftChild {
+		parent.left = current.Right()
+	} else {
+		parent.right = current.Right()
+	}
+	return current
 }
 
 func (t *Tree) IsEqual(other *Tree) bool {

@@ -118,3 +118,8 @@ func TestTree_Insert_Exist(t *testing.T) {
 	_, err := tree.Insert(6)
 	r.Equal(ErrAlreadyExists, err)
 }
+
+func TestTree_Remove(t *testing.T) {
+	//a := assert.New(t)
+	//r := require.New(t)
+}
