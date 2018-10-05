@@ -28,6 +28,10 @@ func (n *Node) IsEqual(other *Node) bool {
 	return n.Value() == other.Value()
 }
 
+func (n *Node) IsLeaf() bool {
+	return n.left == nil && n.right == nil
+}
+
 type Tree struct {
 	root *Node
 }
