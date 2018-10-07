@@ -2,6 +2,11 @@ package binary_search_tree
 
 import "fmt"
 
+var (
+	ErrAlreadyExists = fmt.Errorf("already exists in this tree")
+	ErrNotFound      = fmt.Errorf("not found in this tree")
+)
+
 type Node struct {
 	value int64
 	left  *Node
@@ -36,7 +41,7 @@ type Tree struct {
 	root *Node
 }
 
-func New(root *Node) *Tree {
+func NewTree(root *Node) *Tree {
 	return &Tree{root: root}
 }
 
@@ -182,8 +187,3 @@ func (t *Tree) IsEqual(other *Tree) bool {
 	// TODO: implement
 	return true
 }
-
-var (
-	ErrAlreadyExists = fmt.Errorf("already exists in this tree")
-	ErrNotFound      = fmt.Errorf("not found in this tree")
-)

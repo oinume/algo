@@ -7,11 +7,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestNew(t *testing.T) {
+func TestNewTree(t *testing.T) {
 	a := assert.New(t)
 
 	root := NewNode(100)
-	tree := New(NewNode(100))
+	tree := NewTree(NewNode(100))
 	a.Equal(tree.Root(), root)
 }
 
@@ -19,7 +19,7 @@ func TestTree_Find(t *testing.T) {
 	a := assert.New(t)
 	r := require.New(t)
 
-	tree := New(NewNode(5))
+	tree := NewTree(NewNode(5))
 	left := NewNode(3)
 	tree.root.left = left
 	left.right = NewNode(4)
@@ -57,14 +57,14 @@ func TestTree_Insert(t *testing.T) {
 			insert: 5,
 			want:   NewNode(5),
 			wantTreeFunc: func() *Tree {
-				return New(NewNode(5))
+				return NewTree(NewNode(5))
 			},
 		},
 		{
 			insert: 3,
 			want:   NewNode(3),
 			wantTreeFunc: func() *Tree {
-				tree := New(NewNode(5))
+				tree := NewTree(NewNode(5))
 				tree.root.left = NewNode(3)
 				return tree
 			},
@@ -73,7 +73,7 @@ func TestTree_Insert(t *testing.T) {
 			insert: 6,
 			want:   NewNode(6),
 			wantTreeFunc: func() *Tree {
-				tree := New(NewNode(5))
+				tree := NewTree(NewNode(5))
 				tree.root.left = NewNode(3)
 				tree.root.right = NewNode(6)
 				return tree
@@ -88,7 +88,7 @@ func TestTree_Insert(t *testing.T) {
 			insert: 4,
 			want:   NewNode(4),
 			wantTreeFunc: func() *Tree {
-				tree := New(NewNode(5))
+				tree := NewTree(NewNode(5))
 				left := NewNode(3)
 				tree.root.left = left
 				left.right = NewNode(4)
@@ -98,7 +98,7 @@ func TestTree_Insert(t *testing.T) {
 		},
 	}
 
-	tree := New(nil)
+	tree := NewTree(nil)
 	for _, test := range tests {
 		node, err := tree.Insert(test.insert)
 		if err != nil {
@@ -111,7 +111,7 @@ func TestTree_Insert(t *testing.T) {
 
 func TestTree_Insert_Exist(t *testing.T) {
 	r := require.New(t)
-	tree := New(NewNode(5))
+	tree := NewTree(NewNode(5))
 	tree.root.left = NewNode(3)
 	tree.root.right = NewNode(6)
 
@@ -134,7 +134,7 @@ func TestTree_Remove(t *testing.T) {
 			//  ＼
 			//    4
 			setupTree: func() *Tree {
-				tree := New(NewNode(5))
+				tree := NewTree(NewNode(5))
 				left := NewNode(3)
 				tree.root.left = left
 				left.right = NewNode(4)
@@ -143,7 +143,7 @@ func TestTree_Remove(t *testing.T) {
 			},
 			target: 4,
 			removedAfterTree: func() *Tree {
-				tree := New(NewNode(5))
+				tree := NewTree(NewNode(5))
 				tree.root.left = NewNode(3)
 				tree.root.right = NewNode(6)
 				return tree
@@ -158,7 +158,7 @@ func TestTree_Remove(t *testing.T) {
 			//  ／  ＼
 			// 1     4
 			setupTree: func() *Tree {
-				tree := New(NewNode(9))
+				tree := NewTree(NewNode(9))
 				tree.root.left = NewNode(5)
 				tree.root.right = NewNode(14)
 				left2 := NewNode(3)
@@ -169,7 +169,7 @@ func TestTree_Remove(t *testing.T) {
 			},
 			target: 5,
 			removedAfterTree: func() *Tree {
-				tree := New(NewNode(9))
+				tree := NewTree(NewNode(9))
 				left := NewNode(3)
 				left.left = NewNode(1)
 				left.right = NewNode(4)
@@ -187,7 +187,7 @@ func TestTree_Remove(t *testing.T) {
 			//           ／  ＼
 			//          13    19
 			setupTree: func() *Tree {
-				tree := New(NewNode(9))
+				tree := NewTree(NewNode(9))
 				tree.root.left = NewNode(2)
 				tree.root.right = NewNode(10)
 				right2 := NewNode(17)
@@ -198,7 +198,7 @@ func TestTree_Remove(t *testing.T) {
 			},
 			target: 10,
 			removedAfterTree: func() *Tree {
-				tree := New(NewNode(9))
+				tree := NewTree(NewNode(9))
 				tree.root.left = NewNode(2)
 				right := NewNode(17)
 				right.left = NewNode(13)
@@ -218,7 +218,7 @@ func TestTree_Remove(t *testing.T) {
 			//            ＼
 			//             15
 			setupTree: func() *Tree {
-				tree := New(NewNode(20))
+				tree := NewTree(NewNode(20))
 				tree.root.left = NewNode(7)
 				tree.root.right = NewNode(23)
 
@@ -245,7 +245,7 @@ func TestTree_Remove(t *testing.T) {
 			//  ／  ＼   ／
 			// 2     5  15
 			removedAfterTree: func() *Tree {
-				tree := New(NewNode(20))
+				tree := NewTree(NewNode(20))
 				tree.root.left = NewNode(10)
 				tree.root.right = NewNode(23)
 
@@ -278,7 +278,7 @@ func TestTree_Remove(t *testing.T) {
 func TestTree_Remove_NotFound(t *testing.T) {
 	a := assert.New(t)
 
-	tree := New(NewNode(5))
+	tree := NewTree(NewNode(5))
 	tree.root.left = NewNode(3)
 	tree.root.right = NewNode(6)
 	tree.root.right.right = NewNode(10)
