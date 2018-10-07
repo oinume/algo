@@ -274,3 +274,15 @@ func TestTree_Remove(t *testing.T) {
 		})
 	}
 }
+
+func TestTree_Remove_NotFound(t *testing.T) {
+	a := assert.New(t)
+
+	tree := New(NewNode(5))
+	tree.root.left = NewNode(3)
+	tree.root.right = NewNode(6)
+	tree.root.right.right = NewNode(10)
+
+	_, err := tree.Remove(15)
+	a.Equal(ErrNotFound, err)
+}
