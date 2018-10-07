@@ -127,12 +127,12 @@ func TestTree_Remove(t *testing.T) {
 		target           int64
 		removedAfterTree func() *Tree
 	}{
-		//     5
-		//  ／    ＼
-		// 3       6
-		//  ＼
-		//    4
 		"remove leaf": {
+			//     5
+			//  ／    ＼
+			// 3       6
+			//  ＼
+			//    4
 			setupTree: func() *Tree {
 				tree := New(NewNode(5))
 				left := NewNode(3)
@@ -149,14 +149,14 @@ func TestTree_Remove(t *testing.T) {
 				return tree
 			},
 		},
-		//          9
-		//        ／  ＼
-		//       5     14
-		//     ／
-		//    3
-		//  ／  ＼
-		// 1     4
 		"remove node with left child": {
+			//          9
+			//        ／  ＼
+			//       5     14
+			//     ／
+			//    3
+			//  ／  ＼
+			// 1     4
 			setupTree: func() *Tree {
 				tree := New(NewNode(9))
 				tree.root.left = NewNode(5)
@@ -178,14 +178,14 @@ func TestTree_Remove(t *testing.T) {
 				return tree
 			},
 		},
-		//       9
-		//     ／  ＼
-		//    2     10
-		//            ＼
-		//             17
-		//           ／  ＼
-		//          13    19
 		"remove node with right child": {
+			//       9
+			//     ／  ＼
+			//    2     10
+			//            ＼
+			//             17
+			//           ／  ＼
+			//          13    19
 			setupTree: func() *Tree {
 				tree := New(NewNode(9))
 				tree.root.left = NewNode(2)
@@ -263,7 +263,6 @@ func TestTree_Remove(t *testing.T) {
 				return tree
 			},
 		},
-		// TODO: Add test with left and right child
 	}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {

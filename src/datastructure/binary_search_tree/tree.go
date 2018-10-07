@@ -60,14 +60,15 @@ func (t *Tree) Find(target int64) (*Node, error) {
 }
 
 /*
-     5
-   3   6
+      5
+    ／  ＼
+   3     6
 
-4を挿入したい
+Want to insert `4`
 
-1. n.Value():5 > target:4 -> leftへ行く
-2. n.Value():3 < target:4 -> rightがnil。insertToLeft=falseでforループを終了
-3. 挿入処理: parent=3, insertToLeft=falseなのでnewNodeをparent.rightに挿入
+1. n.Value():5 > target:4 -> visit left
+2. n.Value():3 < target:4 -> right is nil. break the loop with insertToLeft=false
+3. Insertion: parent=3, insertToLeft=false, so insert newNode to parent.right
 */
 func (t *Tree) Insert(target int64) (*Node, error) {
 	var parent *Node
