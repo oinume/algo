@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /go/src/github.com/oinume/algo
     docker:
-      - image: golang:1.10-stretch
+      - image: golang:1.11-stretch
         environment:
     steps:
       - checkout
