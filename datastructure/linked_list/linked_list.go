@@ -3,7 +3,7 @@ package linked_list
 import (
 	"fmt"
 
-	"github.com/oinume/algo/src/datastructure/types"
+	"github.com/oinume/algo/datastructure/types"
 )
 
 type element struct {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/oinume/algo/src/datastructure/types"
+	"github.com/oinume/algo/datastructure/types"
 )
 
 const defaultMaxSize = 100

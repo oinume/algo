@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/oinume/algo/src/datastructure/types"
+	"github.com/oinume/algo/datastructure/types"
 )
 
 const defaultOpenAddressingMaxSize = 53
