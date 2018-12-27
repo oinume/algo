@@ -1,4 +1,3 @@
-// http://d.hatena.ne.jp/naoya/20090412/btree
 package btree
 
 import "fmt"
