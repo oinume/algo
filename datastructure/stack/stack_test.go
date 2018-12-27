@@ -2,36 +2,33 @@ package stack
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestStackPush(t *testing.T) {
-	assert := assert.New(t)
-
-	stack := createStack(5)
-	assert.Equal(3, stack.Size())
+func TestStack_Push(t *testing.T) {
+	stack := NewStack(10)
+	stack.Push(1)
+	stack.Push(2)
+	if got, want := stack.Size(), 2; got != want {
+		t.Errorf("something wrong for Push. unexpected stack size: %v", got)
+	}
 }
 
-func TestStackPop(t *testing.T) {
-	assert := assert.New(t)
-	stack := createStack(5)
-
-	poped, err := stack.Pop()
-	assert.Nil(err)
-	assert.Equal(2, stack.Size())
-	assert.Equal(3, poped)
-
-	stack.Clear()
-	assert.Equal(0, stack.Size())
-	_, err = stack.Pop()
-	assert.NotNil(err)
-}
-
-func createStack(capacity int) *Stack {
-	stack := NewStack(capacity)
+func TestStack_Pop(t *testing.T) {
+	stack := NewStack(10)
 	stack.Push(1)
 	stack.Push(2)
 	stack.Push(3)
-	return stack
+
+	popped, err := stack.Pop()
+	if err != nil {
+		t.Fatal("unexpected error from Pop: ", err)
+	}
+	if want := 3; popped != want {
+		t.Errorf("unexpected result from Pop: want=%v, got=%v", want, popped)
+	}
+
+	stack.Clear()
+	if got, want := stack.Size(), 0; got != want {
+		t.Fatalf("unexpected stack size after Clear: want=%v, got=%v", want, got)
+	}
 }

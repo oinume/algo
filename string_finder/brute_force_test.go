@@ -2,13 +2,10 @@ package string_finder
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestBruteForce_Find(t *testing.T) {
-	a := assert.New(t)
-	testCases := []struct {
+	tests := []struct {
 		text       string
 		pattern    string
 		wantResult int
@@ -18,8 +15,10 @@ func TestBruteForce_Find(t *testing.T) {
 		{text: "日本語", pattern: "日本", wantResult: 0},
 	}
 
-	for _, tc := range testCases {
-		got := NewBruteForce().Initialize(tc.pattern).Find(tc.text)
-		a.Equalf(tc.wantResult, got, "text=%v, pattern=%v", tc.text, tc.pattern)
+	for _, test := range tests {
+		got := NewBruteForce().Initialize(test.pattern).Find(test.text)
+		if test.wantResult != got {
+			t.Errorf("unexpected result of Find: text=%v, pattern=%v, got=%v", test.text, test.pattern, got)
+		}
 	}
 }
