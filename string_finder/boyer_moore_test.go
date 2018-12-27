@@ -2,13 +2,10 @@ package string_finder
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestBoyerMoore_Find(t *testing.T) {
-	a := assert.New(t)
-	testCases := []struct {
+	tests := []struct {
 		text       string
 		pattern    string
 		wantResult int
@@ -19,8 +16,10 @@ func TestBoyerMoore_Find(t *testing.T) {
 		{text: "hoge", pattern: "fuga", wantResult: -1},
 	}
 
-	for _, tc := range testCases {
-		got := NewBoyerMoore().Initialize(tc.pattern).Find(tc.text)
-		a.Equalf(tc.wantResult, got, "text=%v, pattern=%v", tc.text, tc.pattern)
+	for _, test := range tests {
+		got := NewBoyerMoore().Initialize(test.pattern).Find(test.text)
+		if test.wantResult != got {
+			t.Errorf("unexpected result of Find: text=%v, pattern=%v, got=%v", test.text, test.pattern, got)
+		}
 	}
 }
