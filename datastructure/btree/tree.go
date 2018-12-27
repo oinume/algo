@@ -1,3 +1,4 @@
+// http://d.hatena.ne.jp/naoya/20090412/btree
 package btree
 
 import "fmt"
@@ -8,89 +9,41 @@ type Tree struct {
 	root Node
 }
 
-func NewTree(root Node) *Tree {
+func NewTree(order int) *Tree {
 	return &Tree{
-		root: root,
+		root: NewNode(order),
 	}
 }
 
-func (tree *Tree) Insert(item Item) error {
-	if tree.root == nil {
-		tree.root = NewNode(item)
-		return nil
-	}
-
-	tree.insert(tree.root, item)
-	return nil
-}
-
 /*
-// 木 t にエントリー e を挿入する
-    private Node insert(Node t, Pair e) {
-        if (t == null) return new NodeA(e, null, null);
-        int i;
-        for (i = 0; i < t.es.size(); i++) {
-            final int cmp = e.key.compareTo(t.es.get(i).key);
-            // e.key < t.es.get(i).key
-            if (cmp < 0) {
-                t.ns.set(i, insert(t.ns.get(i), e));
-                return balance(t, i);
-            }
-            else if (cmp == 0) {
-                t.es.set(i, e);
-                return t;
-            }
-        }
-        t.ns.set(i, insert(t.ns.get(i), e));
-        return balance(t, i);
-    }
-*/
+class BTree:
+    def __init__(self, t=2):
+        self.t = t
+        self.root = BTree.Node(t)
+        self.root.is_leaf = True
 
-func (tree *Tree) insert(parent Node, newItem Item) (Node, error) {
-	i := 0
-	for i = 0; i < len(parent.Items()); i++ {
-		item := parent.Items()[i]
-		if newItem.Key() == item.Key() {
-			parent.Items()[i] = newItem
-			return parent, nil // TODO: return already exists?
-		}
-		if newItem.Key() < item.Key() {
-			inserted, _ := tree.insert(parent.Children()[i], newItem)
-			parent.Children()[i] = inserted
-			return tree.balance(parent, i), nil
-		}
-	}
-	inserted, _ := tree.insert(parent.Children()[i], newItem)
-	parent.Children()[i] = inserted
-	return tree.balance(parent, i), nil
-}
+    def insert(self, k):
+        r = self.root
+        if len(r) == 2 * self.t - 1:
+            s = BTree.Node(self.t)
+            s.children.append(r)
+            s.split_child(0, r)
+            s.insert_nonfull(k)
+            self.root = s
+        else:
+            r.insert_nonfull(k)
 
-/*
-   // 挿入時のアクティブなノードと反応して木を変形する
-    // アクティブでなければ何もしない
-    private Node balance(Node t, int i) {
-        Node ni = t.ns.get(i);
-        if (!activeI(ni)) return t;
-        // 以下、ni はアクティブ。つまり２分岐
-        t.es.add(i, ni.es.get(0));
-        t.ns.set(i, ni.ns.get(1));
-        t.ns.add(i, ni.ns.get(0));
-        return t.es.size() < m ? t : split(t);
-    }
-*/
-func (tree *Tree) balance(node Node, position int) Node {
-	return node
-}
+    def delete(self, k):
+        r = self.root
+        if r.search(k) is None:
+            return
+        r.delete(k)
+        if len(r) == 0:
+            self.root = r.children[0]
 
-/*
- private abstract class Node { // ノードの型(抽象型)
-        List<Pair> es = new ArrayList<Pair>(m);     // 要素のリスト
-        List<Node> ns = new ArrayList<Node>(m + 1); // 枝のリスト
+    def search(self, k):
+        return self.root.search(k)
 
-        // 挿入時のアクティブなノードを通常のノードへ変換する
-        abstract Node deactivate();
-
-        // 枝が１本の余分なノードを切り詰める
-        Node trim() { return ns.size() == 1 ? ns.get(0) : this; }
-    }
+    def show(self):
+        self.root.show(1)
 */
