@@ -24,11 +24,11 @@ func TestStack_Pop(t *testing.T) {
 		t.Fatal("unexpected error from Pop: ", err)
 	}
 	if want := 3; popped != want {
-		t.Errorf("unexpected result from Pop: want=%v, got=%v", want, popped)
+		t.Errorf("unexpected result from Pop: got=%v, want=%v", popped, want)
 	}
 
 	stack.Clear()
 	if got, want := stack.Size(), 0; got != want {
-		t.Fatalf("unexpected stack size after Clear: want=%v, got=%v", want, got)
+		t.Fatalf("unexpected stack size after Clear: got=%v, want=%v", got, want)
 	}
 }

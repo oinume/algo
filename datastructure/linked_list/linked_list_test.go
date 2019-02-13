@@ -1,99 +1,147 @@
 package linked_list
 
 import (
+	"reflect"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestLinkedListAdd(t *testing.T) {
+func TestLinkedList_Add(t *testing.T) {
 	list := NewLinkedList()
 	list.Add(1)
 	list.Add(2)
 	list.Add(4)
 
-	assert := assert.New(t)
-	assert.Equal(3, list.Size())
+	if got, want := list.Size(), 3; got != want {
+		t.Errorf("unexpected size: got=%v, want=%v", got, want)
+	}
 }
 
-func TestLinkedListInsert(t *testing.T) {
+func TestLinkedList_Insert(t *testing.T) {
 	list := NewLinkedList()
 	list.Add(1)
 	list.Add(2)
 	list.Add(4)
 	list.Insert(1, 3)
 
-	assert := assert.New(t)
-	assert.Equal(4, list.Size())
-
-	expect := NewLinkedList()
+	want := NewLinkedList()
 	for i := 1; i <= 4; i++ {
-		expect.Add(i)
+		want.Add(i)
 	}
-	assert.Equal(expect, list)
+
+	if got, want := list.Size(), 4; got != want {
+		t.Errorf("unexpected size: got=%v, want=%v", got, want)
+	}
+	if !reflect.DeepEqual(list, want) {
+		t.Errorf("unexpected linked list structure: got=%+v, want=%v", list, want)
+	}
 }
 
-func TestLinkedListSet(t *testing.T) {
-	assert := assert.New(t)
+func TestLinkedList_Set(t *testing.T) {
 	list := NewLinkedList()
 	for i := 1; i <= 3; i++ {
 		list.Add(i)
 	}
 	old, err := list.Set(2, 300)
-	assert.NoError(err)
-	assert.Equal(3, old)
+	if err != nil {
+		t.Fatalf("Set() failed: %v", err)
+	}
+	if old != 3 {
+		t.Fatalf("Set() returns unexpected value: got=%v, want=%v", old, 3)
+	}
+
 	var value interface{}
 	for i := list.Iterator(); i.HasNext(); {
-		value, _ = i.Next()
+		v, err := i.Next()
+		if err != nil {
+			t.Fatalf("iterator Next() failed: %v", err)
+		}
+		value = v
+	}
+	if got, want := value, 300; got != want {
+		t.Fatalf("last element is %v but must be %v", got, want)
 	}
 	//t.Logf("list = %v", spew.Sdump(list))
-	assert.Equal(300, value)
 
 	oldFirst, err := list.Set(0, 100)
-	assert.NoError(err)
-	assert.Equal(1, oldFirst)
+	if err != nil {
+		t.Fatalf("Set() failed: %v", err)
+	}
+	if oldFirst != 1 {
+		t.Fatalf("Set() returns unexpected value: got=%v, want=%v", oldFirst, 1)
+	}
+
 	if i := list.Iterator(); i.HasNext() {
 		first, _ := i.Next()
-		assert.Equal(100, first)
+		if got, want := first, 100; got != want {
+			t.Errorf("first element is %v but must be %v", got, want)
+		}
 		second, _ := i.Next()
-		assert.Equal(2, second)
+		if got, want := second, 2; got != want {
+			t.Errorf("second element is %v but must be %v", got, want)
+		}
 	}
 }
 
-func TestLinkedListRemove(t *testing.T) {
-	assert := assert.New(t)
+func TestLinkedList_Remove(t *testing.T) {
 	list := NewLinkedList()
 	for i := 1; i <= 3; i++ {
 		list.Add(i)
 	}
-	assert.True(list.Remove(1))
-	if v, err := list.Iterator().Next(); err == nil {
-		assert.Equal(2, v)
+	if !list.Remove(1) {
+		t.Fatalf("Remove() must return true")
 	}
 
-	assert.True(list.Remove(2))
-	assert.True(list.Remove(3))
-	assert.False(list.Remove(100))
-	assert.Equal(0, list.Size())
-	assert.False(list.Iterator().HasNext())
-	list.Add(10)
+	got, err := list.Iterator().Next()
+	if err != nil {
+		t.Fatalf("Iterator().Next() failed: %v", err)
+	}
+	if want := 2; got != want {
+		t.Fatalf("Iterator().Next() returns unexpected value: got=%v, want=%v", got, want)
+	}
+
+	tests := []struct {
+		value   int
+		removed bool
+	}{
+		{2, true},
+		{3, true},
+		{100, false},
+	}
+	for _, test := range tests {
+		if got, want := list.Remove(test.value), test.removed; got != want {
+			t.Errorf("Remove() return unexpected reuslt: got=%v, want=%v", got, want)
+		}
+	}
+	if list.Size() != 0 {
+		t.Errorf("list must be empty but size is %v", list.Size())
+	}
+	if got, want := list.Iterator().HasNext(), false; got != want {
+		t.Errorf("list iterator HasNext() must be false but %v", got)
+	}
 }
 
-func TestLinkedListIteratorRemove(t *testing.T) {
+func TestLinkedListIterator_Remove(t *testing.T) {
 	list := NewLinkedList()
 	for i := 1; i <= 3; i++ {
 		list.Add(i)
 	}
 
 	iterator := list.Iterator()
-	first, _ := iterator.Next()
+	first, err := iterator.Next()
+	if err != nil {
+		t.Fatalf("iterator.Next() failed: %v", err)
+	}
 
-	assert := assert.New(t)
-	assert.Equal(1, first)
-
+	if got, want := first, 1; got != want {
+		t.Errorf("Add() failed: got=%v, want=%v", got, want)
+	}
 	for i := 1; i <= 3; i++ {
 		removed, err := iterator.Remove()
-		assert.NoError(err)
-		assert.Equal(i, removed)
+		if err != nil {
+			t.Fatalf("iterator.Remove() failed: %v", err)
+		}
+		if got, want := removed, i; got != want {
+			t.Errorf("unexpected removed value: got=%v, want=%v", got, want)
+		}
 	}
 }
