@@ -11,9 +11,7 @@ type Node struct {
 }
 
 func NewNode(value int64) *Node {
-	return &Node{
-		value: value,
-	}
+	return &Node{value: value}
 }
 
 func (n *Node) Left() *Node {
