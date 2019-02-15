@@ -29,7 +29,7 @@ func (t *Tree) Insert(value int64) {
 }
 
 func (t *Tree) Dump(w io.Writer) {
-	t.root.Dump(w)
+	t.root.Dump(w, 1)
 }
 
 /*

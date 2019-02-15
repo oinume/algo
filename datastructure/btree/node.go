@@ -1,11 +1,16 @@
 package btree
 
-import "io"
+import (
+	"fmt"
+	"io"
+	"strings"
+)
 
 type Node struct {
 	minDegree int
 	leaf      bool
 	keys      []int64
+	children  []*Node
 }
 
 func NewNode(minDegree int, leaf bool) *Node {
@@ -13,6 +18,7 @@ func NewNode(minDegree int, leaf bool) *Node {
 		minDegree: minDegree,
 		leaf:      leaf,
 		keys:      nil,
+		children:  nil, // TODO: make
 	}
 }
 
@@ -21,7 +27,7 @@ func (n *Node) IsLeaf() bool {
 }
 
 func (n *Node) Children() []*Node {
-	return nil
+	return n.children
 }
 
 func (n *Node) InsertNonFull(value int64) {
@@ -36,6 +42,15 @@ func (n *Node) InsertNonFull(value int64) {
 		n.keys = append(n.keys, value)
 	} else {
 		// TODO
+		i := n.locateSubtree(value)
+		child := n.children[i]
+		if n.needSplit() {
+			n.splitChild()
+			if value > n.keys[i] {
+				child = n.children[i+1]
+			}
+		}
+		child.InsertNonFull(value)
 	}
 	/*
 		def insert_nonfull(self, k):
@@ -57,6 +72,48 @@ func (n *Node) InsertNonFull(value int64) {
 	*/
 }
 
-func (n *Node) Dump(w io.Writer) {
+func (n *Node) needSplit() bool {
+	return len(n.keys) == 2*n.minDegree-1
+}
 
+func (n *Node) locateSubtree(value int64) int {
+	i := 0
+	for ; i < len(n.keys); i++ {
+		if value < n.keys[i] {
+			return i
+		}
+	}
+	return i
+	/*
+	   def locate_subtree(self, k):
+	       i = 0
+	       while (i < len(self)):
+	           if k < self.keys[i]:
+	               return i
+	           i += 1
+	       return i
+
+	*/
+}
+
+func (n *Node) splitChild() {}
+
+func (n *Node) Dump(w io.Writer, pad int) {
+	fmt.Fprintf(w, "%s:%v\n", strings.Repeat("-", pad), n.keys)
+	if n.leaf {
+		return
+	}
+	for _, c := range n.children {
+		c.Dump(w, pad+1)
+	}
+	/*
+			        def show(self, pad):
+		            print "%s%s" % ('-' * pad, self.keys)
+		            if self.is_leaf:
+		                return
+		            else:
+		                for c in self.children:
+		                    c.show(pad + 1)
+
+	*/
 }

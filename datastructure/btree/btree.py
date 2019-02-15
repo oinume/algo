@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # http://d.hatena.ne.jp/naoya/20090412/btree
+# t: min degree
 
 class BTree:
     def __init__(self, t=2):
