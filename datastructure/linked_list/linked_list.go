@@ -23,6 +23,8 @@ type linkedList struct {
 	head *element
 }
 
+var _ types.List = (*linkedList)(nil)
+
 func NewLinkedList() types.List {
 	return &linkedList{
 		head: &element{
