@@ -98,7 +98,7 @@ class BTree:
                 c.insert_nonfull(k)
 
         def show(self, pad):
-            print "%s%s" % ('-' * pad, self.keys)
+            print "%s%s:[children=%d,leaf=%s]" % ('-' * pad, self.keys, len(self.children), self.is_leaf)
             if self.is_leaf:
                 return
             else:
@@ -166,9 +166,9 @@ import sys
 import random
 
 ## order 5 の BTree の例
-tree = BTree(5)
-list = range(100)
-random.shuffle(list)
+tree = BTree(2)
+list = range(4)
+#random.shuffle(list)
 
 for x in list:
     tree.insert(x)

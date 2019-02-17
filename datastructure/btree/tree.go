@@ -19,12 +19,34 @@ func NewTree(minDegree int) *Tree {
 	}
 }
 
+func (t *Tree) NewNode() *Node {
+	return NewNode(t.minDegree, false)
+}
+
 func (t *Tree) Insert(value int64) {
 	r := t.root
-	if len(r.Children()) == 2*t.minDegree-1 {
-		// TODO
+	if r.needSplit() {
+		// TODO: unit test
+		n := NewNode(t.minDegree, false)
+		n.name = "n"
+		n.children = append(n.children, r)
+		//fmt.Printf("n.children = %+v\n", len(n.children))
+		//println("---Insert---")
+		//n.Dump(os.Stdout, 0)
+		r.name = "r"
+		n.splitChild(0, r)
+		//t.Dump(os.Stdout)
+		n.insertNonFull(value)
+		t.root = n
+		/*
+		   s = BTree.Node(self.t)
+		   s.children.append(r)
+		   s.split_child(0, r)
+		   s.insert_nonfull(k)
+		   self.root = s
+		*/
 	} else {
-		r.InsertNonFull(value)
+		r.insertNonFull(value)
 	}
 }
 
