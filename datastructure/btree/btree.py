@@ -167,7 +167,7 @@ import random
 
 ## order 5 の BTree の例
 tree = BTree(2)
-list = range(4)
+list = range(10)
 #random.shuffle(list)
 
 for x in list:

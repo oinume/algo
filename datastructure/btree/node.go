@@ -52,24 +52,6 @@ func (n *Node) insertNonFull(value int64) {
 		}
 		child.insertNonFull(value)
 	}
-	/*
-		def insert_nonfull(self, k):
-			if self.is_leaf:
-				i = 0
-				for i in xrange(len(self)):
-					if k < self.keys[i]:
-						self.keys.insert(i, k)
-						return self
-				self.keys.append(k)
-			else:
-				i = self.locate_subtree(k)
-				c = self.children[i]
-				if (len(c) == 2 * self.t - 1):
-					self.split_child(i, c)
-					if k > self.keys[i]:
-						c = self.children[i + 1]
-				c.insert_nonfull(k)
-	*/
 }
 
 func (n *Node) needSplit() bool {
@@ -84,16 +66,6 @@ func (n *Node) locateSubtree(value int64) int {
 		}
 	}
 	return i
-	/*
-	   def locate_subtree(self, k):
-	       i = 0
-	       while (i < len(self)):
-	           if k < self.keys[i]:
-	               return i
-	           i += 1
-	       return i
-
-	*/
 }
 
 func (n *Node) splitChild(index int, target *Node) {
@@ -101,9 +73,6 @@ func (n *Node) splitChild(index int, target *Node) {
 	newChild := NewNode(n.minDegree, target.leaf)
 	newChild.keys = target.keys[t:]
 	newChild.name = "newChild"
-	//for _, v := range target.keys[t:] {
-	//	newChild.keys = append(newChild.keys, v)
-	//}
 	if !target.leaf {
 		newChild.children = target.children[t:]
 	}
@@ -115,22 +84,6 @@ func (n *Node) splitChild(index int, target *Node) {
 	// Update target's keys and children for splitting
 	target.keys = target.keys[0 : t-1]
 	target.children = target.children[0:t]
-	/*
-	   def split_child(self, i, y):
-	       t = self.t
-	       z = BTree.Node(t)
-
-	       z.is_leaf = y.is_leaf
-	       z.keys = y.keys[t:]
-	       if not y.is_leaf:
-	           z.children = y.children[t:]
-
-	       self.children.insert(i + 1, z)
-	       self.keys.insert(i, y.keys[t - 1])
-
-	       y.keys = y.keys[0:t - 1]
-	       y.children = y.children[0:t]
-	*/
 }
 
 func (n *Node) Dump(w io.Writer, pad int) {
@@ -141,16 +94,6 @@ func (n *Node) Dump(w io.Writer, pad int) {
 	for _, c := range n.children {
 		c.Dump(w, pad+1)
 	}
-	/*
-			        def show(self, pad):
-		            print "%s%s" % ('-' * pad, self.keys)
-		            if self.is_leaf:
-		                return
-		            else:
-		                for c in self.children:
-		                    c.show(pad + 1)
-
-	*/
 }
 
 // TODO: bind to n
@@ -162,7 +105,6 @@ func insertKeyAt(keys []int64, position int, value int64) []int64 {
 		}
 		s = append(s, v)
 	}
-	// TODO: confirm
 	if position >= len(keys) {
 		s = append(s, value)
 	}
