@@ -51,3 +51,18 @@ func TestTree_Insert_Split(t *testing.T) {
 		t.Errorf("unexpected root children length: got=%v, want=%v", got, want)
 	}
 }
+
+func TestTree_Find(t *testing.T) {
+	tree := NewTree(2)
+	for i := 0; i < 4; i++ {
+		tree.Insert(int64(i))
+	}
+	//tree.Dump(os.Stdout)
+	_, index, err := tree.Find(3)
+	if err != nil {
+		t.Fatalf("tree.Find must succeeed: %v", err)
+	}
+	if got, want := index, 1; got != want {
+		t.Errorf("unexpected index returned: got=%v, want=%v", got, want)
+	}
+}

@@ -31,6 +31,21 @@ func (n *Node) Children() []*Node {
 	return n.children
 }
 
+func (n *Node) Find(target int64) (*Node, int, error) {
+	var i int
+	for i = 0; i < len(n.keys) && n.keys[i] < target; i++ {
+	}
+
+	if i < len(n.keys) && n.keys[i] == target {
+		// Found
+		return n, i, nil
+	} else if n.leaf {
+		return nil, 0, ErrNotFound
+	} else {
+		return n.children[i].Find(target)
+	}
+}
+
 func (n *Node) insertNonFull(value int64) {
 	if n.IsLeaf() {
 		for i, key := range n.keys {

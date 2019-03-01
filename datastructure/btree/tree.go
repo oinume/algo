@@ -5,7 +5,10 @@ import (
 	"io"
 )
 
-var ErrAlreadyExists = fmt.Errorf("the key already exists")
+var (
+	ErrAlreadyExists = fmt.Errorf("the key already exists")
+	ErrNotFound      = fmt.Errorf("the value not found")
+)
 
 type Tree struct {
 	root      *Node
@@ -36,6 +39,10 @@ func (t *Tree) Insert(value int64) {
 	} else {
 		r.insertNonFull(value)
 	}
+}
+
+func (t *Tree) Find(target int64) (*Node, int, error) {
+	return t.root.Find(target)
 }
 
 func (t *Tree) Dump(w io.Writer) {
