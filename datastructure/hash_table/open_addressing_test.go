@@ -105,8 +105,8 @@ func TestOpenAddressing_Remove(t *testing.T) {
 	hashTable := NewOpenAddressing()
 
 	testCases := []struct {
-		key interface{}
-		value interface{}
+		key    interface{}
+		value  interface{}
 		remove bool
 	}{
 		{key: "abc", value: "ABC", remove: true},
