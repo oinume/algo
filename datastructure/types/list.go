@@ -16,5 +16,5 @@ type List interface {
 }
 
 var (
-	ErrorIndexOutOfRange error = fmt.Errorf("Index out of range")
+	ErrorIndexOutOfRange = fmt.Errorf("index out of range")
 )
