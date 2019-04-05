@@ -1,0 +1,5 @@
+(io.Closer).Close
+io.WriteString
+(*database/sql.Rows).Close
+(*github.com/kouzoh/authority-service/vendor/google.golang.org/grpc.ClientConn).Close
+(net/Listner).Close

@@ -29,11 +29,15 @@ jobs:
           key: go-dep-{{ checksum "Gopkg.lock" }}
           paths:
             - "/go/src/github.com/oinume/algo/vendor"
-#      - run:
-#          name: "Run go-lint"
-#          command: make go-lint
       - run:
-          name: "Run go-test"
+          name: "Install lint tools"
+          command: |
+            make bootstrap-lint-tools
+      - run:
+          name: "Run lint"
+          command: make lint
+      - run:
+          name: "Run go test"
           command: |
             go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
       - run:

@@ -56,7 +56,7 @@ func (l *linkedList) Insert(index int, v interface{}) {
 
 func (l *linkedList) Size() int {
 	// TODO: This code is too slow
-	var size int = 0
+	size := 0
 	for e := l.head.next; e != nil; e = e.next {
 		size++
 	}
@@ -114,7 +114,7 @@ func (l *linkedList) First() (interface{}, error) {
 	if l.head.next != nil {
 		return l.head.next.data, nil
 	}
-	return nil, fmt.Errorf("Empty list.")
+	return nil, fmt.Errorf("empty list")
 }
 
 func (l *linkedList) Iterator() types.Iterator {
@@ -134,7 +134,7 @@ func (i *linkedListIterator) Next() (interface{}, error) {
 		i.cursor = i.cursor.next
 		return data, nil
 	} else {
-		return nil, fmt.Errorf("No next element.")
+		return nil, fmt.Errorf("no next element")
 	}
 }
 
@@ -145,7 +145,7 @@ func (i *linkedListIterator) HasNext() bool {
 func (i *linkedListIterator) Remove() (interface{}, error) {
 	data := i.cursor.data
 	if data == nil {
-		return nil, fmt.Errorf("No current object")
+		return nil, fmt.Errorf("no current object")
 	}
 	if i.HasNext() {
 		i.cursor = i.cursor.next

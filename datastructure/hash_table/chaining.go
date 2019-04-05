@@ -113,18 +113,18 @@ func (h *chaining) getIndex(key interface{}) int {
 }
 
 // TODO: Replace getIndex by this
-func (h *chaining) find(key interface{}) (*list.List, error) {
-	k, ok := key.(types.Hashable)
-	var hashCode int
-	if ok {
-		hashCode = k.HashCode()
-	} else {
-		hashCode = h.calculateHashCode(key)
-	}
-	index := hashCode % h.maxSize
-	l := h.data[index]
-	if l == nil {
-		return nil, ErrNotExists
-	}
-	return l, nil
-}
+//func (h *chaining) find(key interface{}) (*list.List, error) {
+//	k, ok := key.(types.Hashable)
+//	var hashCode int
+//	if ok {
+//		hashCode = k.HashCode()
+//	} else {
+//		hashCode = h.calculateHashCode(key)
+//	}
+//	index := hashCode % h.maxSize
+//	l := h.data[index]
+//	if l == nil {
+//		return nil, ErrNotExists
+//	}
+//	return l, nil
+//}

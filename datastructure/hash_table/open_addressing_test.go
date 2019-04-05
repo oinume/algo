@@ -95,6 +95,7 @@ func TestOpenAddressing_Get(t *testing.T) {
 		_, err := hashTable.Put(tc.key, tc.value)
 		r.NoError(err)
 		actual, err := hashTable.Get(tc.key)
+		r.NoError(err)
 		a.Equal(tc.value, actual)
 	}
 }
@@ -105,8 +106,8 @@ func TestOpenAddressing_Remove(t *testing.T) {
 	hashTable := NewOpenAddressing()
 
 	testCases := []struct {
-		key interface{}
-		value interface{}
+		key    interface{}
+		value  interface{}
 		remove bool
 	}{
 		{key: "abc", value: "ABC", remove: true},
