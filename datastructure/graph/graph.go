@@ -2,9 +2,13 @@ package graph
 
 type Vertex struct{}
 
+func (v *Vertex) IsEqual(other *Vertex) bool {
+	return v == other
+}
+
 type Edge struct {
-	start Vertex
-	end   Vertex
+	start *Vertex
+	end   *Vertex
 }
 
 type Graph struct {
