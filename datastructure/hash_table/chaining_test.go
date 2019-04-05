@@ -44,8 +44,8 @@ func TestHashTableChaining_Put_Collision(t *testing.T) {
 	r := require.New(t)
 
 	table := NewChaining(10)
-	table.Put("abc", "ABC")
-	table.Put("cba", "CBA")
+	_, _ = table.Put("abc", "ABC")
+	_, _ = table.Put("cba", "CBA")
 	a.Equal(2, table.Size())
 
 	actual, err := table.Get("cba")
@@ -58,9 +58,9 @@ func TestHashTableChaining_Put_Collision_Exists(t *testing.T) {
 	r := require.New(t)
 
 	table := NewChaining(10)
-	table.Put("abc", "ABC")
-	table.Put("abc", "AABBCC")
-	table.Put("cba", "CBA")
+	_, _ = table.Put("abc", "ABC")
+	_, _ = table.Put("abc", "AABBCC")
+	_, _ = table.Put("cba", "CBA")
 	a.Equal(2, table.Size())
 
 	actual, err := table.Get("abc")
@@ -69,12 +69,14 @@ func TestHashTableChaining_Put_Collision_Exists(t *testing.T) {
 }
 
 func TestHashTableChaining_Get(t *testing.T) {
-	assert := assert.New(t)
+	a := assert.New(t)
+	r := require.New(t)
 	hashMap := NewChaining(10)
-	hashMap.Put(1, 1)
+	_, err := hashMap.Put(1, 1)
+	r.NoError(err)
 	value, err := hashMap.Get(1)
-	assert.NoError(err)
-	assert.Equal(1, value)
+	a.NoError(err)
+	a.Equal(1, value)
 }
 
 func TestHashTableChaining_Remove(t *testing.T) {
@@ -82,12 +84,13 @@ func TestHashTableChaining_Remove(t *testing.T) {
 	r := require.New(t)
 	hashMap := NewChaining(10)
 
-	hashMap.Put(1, 1)
+	_, err := hashMap.Put(1, 1)
+	r.NoError(err)
 	value, err := hashMap.Remove(1)
 	r.NoError(err)
 	a.Equal(1, value)
 	a.Equal(0, hashMap.Size())
 
-	value, err = hashMap.Remove(100)
+	_, err = hashMap.Remove(100)
 	a.Error(err)
 }

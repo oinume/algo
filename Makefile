@@ -19,8 +19,8 @@ lint: fmt vet staticcheck errcheck
 
 .PHONY: fmt
 fmt:
-	goimports -w $(FORMAT_PACKAGES) | grep -E '.'; test $$? -eq 1
-	gofmt -w $(FORMAT_PACKAGES) | grep -E '.'; test $$? -eq 1
+	goimports -l $(FORMAT_PACKAGES) | grep -E '.'; test $$? -eq 1
+	gofmt -l $(FORMAT_PACKAGES) | grep -E '.'; test $$? -eq 1
 
 .PHONY: vet
 vet:
