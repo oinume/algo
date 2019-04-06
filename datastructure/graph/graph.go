@@ -31,15 +31,15 @@ func NewEdge(start, end *Vertex) *Edge {
 }
 
 type Graph struct {
-	// All vertexes this Graph has
-	vertexes *vertexSet
+	// All vertices this Graph has
+	vertices *vertexSet
 	// Edges per vertex
 	edges map[*Vertex][]*Edge
 }
 
 func New() *Graph {
 	return &Graph{
-		vertexes: NewVertexSet(100),
+		vertices: NewVertexSet(100),
 		edges:    make(map[*Vertex][]*Edge, 100),
 	}
 }
@@ -51,11 +51,11 @@ func (g *Graph) Edges(v *Vertex) []*Edge {
 	return nil
 }
 
-func (g *Graph) Vertexes() []*Vertex {
-	return g.vertexes.Values()
+func (g *Graph) Vertices() []*Vertex {
+	return g.vertices.Values()
 }
 
 func (g *Graph) AddVertexWithEdges(v *Vertex, edges []*Edge) {
 	g.edges[v] = edges
-	g.vertexes.Add(v)
+	g.vertices.Add(v)
 }
