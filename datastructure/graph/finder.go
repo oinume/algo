@@ -1,7 +1,7 @@
 package graph
 
 type Finder interface {
-	Find(g *Graph, start *Vertex, target *Vertex) bool
+	Find(g *Graph, start *Vertex, target *Vertex, visitor Visitor) bool
 }
 
 // dfsFinder is depth first search finder
@@ -15,7 +15,9 @@ func NewDFSFinder() Finder {
 	}
 }
 
-func (dfs *dfsFinder) Find(g *Graph, start *Vertex, target *Vertex) bool {
+func (dfs *dfsFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor Visitor) bool {
+	visitor.Visit(g, start)
+
 	if start.IsEqual(target) {
 		return true
 	}
@@ -25,10 +27,32 @@ func (dfs *dfsFinder) Find(g *Graph, start *Vertex, target *Vertex) bool {
 
 	edges := g.Edges(start)
 	for _, edge := range edges {
-		if result := dfs.Find(g, edge.end, target); result {
+		if result := dfs.Find(g, edge.end, target, visitor); result {
 			return result
 		}
 	}
 
 	return false
+}
+
+type Visitor interface {
+	Visit(g *Graph, visited *Vertex)
+}
+
+type nopVisitor struct{}
+
+func (nv *nopVisitor) Visit(g *Graph, v *Vertex) {}
+
+func NewListVisitor() Visitor {
+	return &listVisitor{
+		list: make([]*Vertex, 0, 100),
+	}
+}
+
+type listVisitor struct {
+	list []*Vertex
+}
+
+func (lv *listVisitor) Visit(g *Graph, v *Vertex) {
+	lv.list = append(lv.list, v)
 }

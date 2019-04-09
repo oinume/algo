@@ -14,7 +14,7 @@ func Test_dfsFinder_Find(t *testing.T) {
 	graph.AddVertexWithEdges(v1, []*Edge{e1_2})
 
 	f := NewDFSFinder()
-	if found := f.Find(graph, v1, v2); !found {
+	if found := f.Find(graph, v1, v2, &nopVisitor{}); !found {
 		t.Errorf("v1 not found somehow")
 	}
 }
