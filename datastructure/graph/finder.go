@@ -43,6 +43,10 @@ type nopVisitor struct{}
 
 func (nv *nopVisitor) Visit(g *Graph, v *Vertex) {}
 
+func (nv *nopVisitor) Visited() []*Vertex {
+	return nil
+}
+
 func NewListVisitor() Visitor {
 	return &listVisitor{
 		list: make([]*Vertex, 0, 100),

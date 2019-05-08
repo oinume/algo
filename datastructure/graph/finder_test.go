@@ -6,7 +6,7 @@ import (
 )
 
 // https://www.geeksforgeeks.org/graph-data-structure-and-algorithms/
-func Test_dfsFinder_Find(t *testing.T) {
+func Test_dfsFinder_Find_2V(t *testing.T) {
 	graph := New()
 	v1 := NewVertex("1")
 	v2 := NewVertex("2")
@@ -26,8 +26,8 @@ func Test_dfsFinder_Find(t *testing.T) {
 ／
 D
 */
-func newGraph() *Graph {
-	g := New()
+func Test_dfsFinder_Find_4V(t *testing.T) {
+	graph := New()
 	v := make([]*Vertex, 4)
 	for i := 0; i < len(v); i++ {
 		v[i] = NewVertex(fmt.Sprint(i))
@@ -35,11 +35,15 @@ func newGraph() *Graph {
 	edges := map[*Vertex][]*Edge{
 		v[0] /* A */ : {NewEdge(v[0], v[1]), NewEdge(v[0], v[2])},
 		v[1] /* B */ : {NewEdge(v[1], v[2]), NewEdge(v[1], v[3])},
-		v[2] /* C */ : {NewEdge(v[2], v[0]), NewEdge(v[2], v[1])},
-		v[3] /* D */ : {NewEdge(v[3], v[1])},
+		v[2] /* C */ : nil,
+		v[3] /* D */ : nil,
 	}
 	for v, e := range edges {
-		g.AddVertexWithEdges(v, e)
+		graph.AddVertexWithEdges(v, e)
 	}
-	return g
+
+	f := NewDFSFinder()
+	if found := f.Find(graph, v[0] /*A*/, v[3] /*D*/, &nopVisitor{}); !found {
+		t.Errorf("v3 not found somehow")
+	}
 }

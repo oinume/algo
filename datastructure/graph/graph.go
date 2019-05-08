@@ -18,6 +18,10 @@ func (v *Vertex) IsEqual(other *Vertex) bool {
 	return false
 }
 
+func (v *Vertex) String() string {
+	return v.value
+}
+
 type Edge struct {
 	start *Vertex
 	end   *Vertex
