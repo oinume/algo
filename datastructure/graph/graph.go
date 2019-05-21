@@ -1,5 +1,7 @@
 package graph
 
+import "fmt"
+
 type Vertex struct {
 	value string
 }
@@ -34,6 +36,10 @@ func NewEdge(start, end *Vertex) *Edge {
 	}
 }
 
+func (e *Edge) String() string {
+	return fmt.Sprintf("[%v -> %v]", e.start, e.end)
+}
+
 type Graph struct {
 	// All vertices this Graph has
 	vertices *vertexSet
@@ -62,4 +68,9 @@ func (g *Graph) Vertices() []*Vertex {
 func (g *Graph) AddVertexWithEdges(v *Vertex, edges []*Edge) {
 	g.edges[v] = edges
 	g.vertices.Add(v)
+}
+
+func (g *Graph) AddEdge(start *Vertex, end *Vertex) {
+	g.edges[start] = append(g.edges[start], &Edge{start: start, end: end})
+	g.vertices.Add(start)
 }

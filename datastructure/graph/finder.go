@@ -16,17 +16,23 @@ func NewDFSFinder() Finder {
 }
 
 func (dfs *dfsFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor Visitor) bool {
+	//fmt.Printf("Find(): start = %+v\n", start)
 	visitor.Visit(g, start)
 
 	if start.IsEqual(target) {
 		return true
 	}
-	if _, ok := dfs.visited[start]; ok {
+	if _, visited := dfs.visited[start]; visited {
 		return false
 	}
 
+	dfs.visited[start] = struct{}{}
 	edges := g.Edges(start)
+	//fmt.Printf("edges = %+v\n", edges)
 	for _, edge := range edges {
+		if _, visited := dfs.visited[edge.end]; visited {
+			continue
+		}
 		if result := dfs.Find(g, edge.end, target, visitor); result {
 			return result
 		}
@@ -36,7 +42,7 @@ func (dfs *dfsFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor Visi
 }
 
 type Visitor interface {
-	Visit(g *Graph, visited *Vertex)
+	Visit(g *Graph, v *Vertex)
 }
 
 type nopVisitor struct{}
