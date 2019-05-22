@@ -5,6 +5,7 @@ jobs:
     docker:
       - image: golang:1.12-stretch
         environment:
+          - GO111MODULE: "on"
     steps:
       - checkout
       - run:
@@ -13,26 +14,20 @@ jobs:
             echo "" > ~/.gitconfig
             git config --global url."https://github.com".insteadOf git://github.com
             git config --global http.https://gopkg.in.followRedirects true
-      - run:
-          name: "Install dep"
-          command: |
-            go get github.com/golang/dep/cmd/dep
       - restore_cache:
-          key: go-dep-{{ checksum "Gopkg.lock" }}
+          key: go-mod-{{ checksum "go.sum" }}
       - run:
           name: "Install dependencies"
           command: |
-            if [ ! -e "/go/src/github.com/oinume/algo/vendor" ]; then
-              dep ensure -v
-            fi
+            go mod download
       - save_cache:
-          key: go-dep-{{ checksum "Gopkg.lock" }}
+          key: go-mod-{{ checksum "go.sum" }}
           paths:
-            - "/go/src/github.com/oinume/algo/vendor"
+            - "/go/pkg/mod"
       - run:
           name: "Install lint tools"
           command: |
-            make bootstrap-lint-tools
+            make bootstrap-lint-tool
       - run:
           name: "Run lint"
           command: make lint
