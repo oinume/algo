@@ -4,18 +4,16 @@
 # algo
 Studying algorithms and data structures with Go.
 
+## Requirements
+
+- Go 1.11 or later
+
 ## Set up
 
-At first, Install dep.
+You need to enable env variables related to go modules.
 
-```bash
-go get github.com/golang/dep/cmd/dep
-```
-
-Then install dependencies.
-
-```bash
-dep ensure -v
+```$bash
+$ source .envrc
 ```
 
 ## Run
