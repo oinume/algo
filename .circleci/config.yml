@@ -27,7 +27,7 @@ jobs:
       - run:
           name: "Install lint tools"
           command: |
-            make bootstrap-lint-tools
+            make bootstrap-lint-tool
       - run:
           name: "Run lint"
           command: make lint
