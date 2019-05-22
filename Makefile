@@ -7,11 +7,11 @@ LINT_TOOLS=\
 LINT_PACKAGES = $(shell go list ./...)
 FORMAT_PACKAGES = $(foreach pkg,$(LINT_PACKAGES),$(shell go env GOPATH)/src/$(pkg))
 
-.PHONY: bootstrap-lint-tools
-bootstrap-lint-tools:
-	@for tool in $(LINT_TOOLS) ; do \
+.PHONY: bootstrap-lint-tool
+bootstrap-lint-tool:
+	@cd tool && for tool in $(LINT_TOOLS) ; do \
 		echo "Installing/Updating $$tool" ; \
-		GO111MODULE=off go get -u $$tool; \
+		GO111MODULE=on go install $$tool; \
 	done
 
 .PHONY: lint
