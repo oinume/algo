@@ -1,6 +1,9 @@
 package graph
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+)
 
 type Vertex struct {
 	value string
@@ -29,7 +32,7 @@ type Edge struct {
 	end   *Vertex
 }
 
-func NewEdge(start, end *Vertex) *Edge {
+func newEdge(start, end *Vertex) *Edge {
 	return &Edge{
 		start: start,
 		end:   end,
@@ -61,16 +64,26 @@ func (g *Graph) Edges(v *Vertex) []*Edge {
 	return nil
 }
 
+func (g *Graph) Dump() string {
+	b := new(bytes.Buffer)
+	for _, v := range g.Vertices() {
+		edges := g.Edges(v)
+		if edges == nil {
+			continue
+		}
+		for _, e := range edges {
+			_, _ = fmt.Fprintf(b, "%v:", v.String())
+			_, _ = fmt.Fprintln(b, e.String())
+		}
+	}
+	return b.String()
+}
+
 func (g *Graph) Vertices() []*Vertex {
 	return g.vertices.Values()
 }
 
-func (g *Graph) AddVertexWithEdges(v *Vertex, edges []*Edge) {
-	g.edges[v] = edges
-	g.vertices.Add(v)
-}
-
 func (g *Graph) AddEdge(start *Vertex, end *Vertex) {
-	g.edges[start] = append(g.edges[start], &Edge{start: start, end: end})
+	g.edges[start] = append(g.edges[start], newEdge(start, end))
 	g.vertices.Add(start)
 }
