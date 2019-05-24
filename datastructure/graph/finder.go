@@ -56,7 +56,7 @@ func NewDFSLoopFinder() Finder {
 }
 
 func (dfs *dfsLoopFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor Visitor) bool {
-	st := stack.NewStack(g.vertices.Size())
+	st := stack.New(g.vertices.Size())
 	st.Push(start)
 
 	for !st.IsEmpty() {
