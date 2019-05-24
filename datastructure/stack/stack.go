@@ -48,3 +48,7 @@ func (s *Stack) Size() int {
 func (s *Stack) Clear() {
 	s.data = make([]interface{}, 0, s.capacity)
 }
+
+func (s *Stack) IsEmpty() bool {
+	return s.Size() == 0
+}
