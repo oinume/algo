@@ -1,8 +1,6 @@
 package graph
 
 import (
-	"fmt"
-
 	"github.com/oinume/algo/datastructure/stack"
 )
 
@@ -69,7 +67,7 @@ func (dfs *dfsLoopFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor 
 		}
 
 		vertex := v.(*Vertex)
-		fmt.Printf("vertex:%v, edges=%+v\n", vertex, g.Edges(vertex))
+		//fmt.Printf("vertex:%v, edges=%+v\n", vertex, g.Edges(vertex))
 		visitor.Visit(g, vertex)
 		if vertex.IsEqual(target) {
 			return true
@@ -81,7 +79,7 @@ func (dfs *dfsLoopFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor 
 				continue
 			}
 			st.Push(edge.end)
-			fmt.Printf("Pushed: %+v\n", edge.end)
+			//fmt.Printf("Pushed: %+v\n", edge.end)
 		}
 	}
 
