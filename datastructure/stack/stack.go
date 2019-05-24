@@ -13,7 +13,7 @@ type Stack struct {
 	capacity int
 }
 
-func NewStack(capacity int) *Stack {
+func New(capacity int) *Stack {
 	if capacity <= 0 {
 		panic("must be 'capacity' > 0")
 	}

@@ -5,7 +5,7 @@ import (
 )
 
 func TestStack_Push(t *testing.T) {
-	stack := NewStack(10)
+	stack := New(10)
 	stack.Push(1)
 	stack.Push(2)
 	if got, want := stack.Size(), 2; got != want {
@@ -14,7 +14,7 @@ func TestStack_Push(t *testing.T) {
 }
 
 func TestStack_Pop(t *testing.T) {
-	stack := NewStack(10)
+	stack := New(10)
 	stack.Push(1)
 	stack.Push(2)
 	stack.Push(3)
@@ -29,6 +29,6 @@ func TestStack_Pop(t *testing.T) {
 
 	stack.Clear()
 	if got, want := stack.Size(), 0; got != want {
-		t.Fatalf("unexpected stack size after Clear: got=%v, want=%v", got, want)
+		t.Errorf("unexpected stack size after Clear: got=%v, want=%v", got, want)
 	}
 }
