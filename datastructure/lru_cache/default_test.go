@@ -36,7 +36,7 @@ func Test_defaultLRUCache_PutAndGet(t *testing.T) {
 
 func Test_defaultLRUCache_PutAndGet2(t *testing.T) {
 	/*
-		Constructor(2)
+		NewDefault(2)
 		put(2, 1)
 		put(2, 2)
 		get(2)
