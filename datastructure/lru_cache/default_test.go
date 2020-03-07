@@ -1,6 +1,9 @@
 package lru_cache_test
 
 import (
+	"bytes"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/oinume/algo/datastructure/lru_cache"
@@ -55,5 +58,25 @@ func Test_defaultLRUCache_PutAndGet2(t *testing.T) {
 	cache.Put(4, 1)
 	if got, want := cache.Get(2), -1; got != want {
 		t.Errorf("got %v but want %v", got, want)
+	}
+}
+
+func Test_defaultLRUCache_Dump(t *testing.T) {
+	cache := lru_cache.NewDefault(2)
+	dumper, ok := cache.(lru_cache.Dumper)
+	if !ok {
+		t.Fatal("Must implement Dumper")
+	}
+
+	const value = 12345
+	cache.Put(1, value)
+
+	var b bytes.Buffer
+	if err := dumper.Dump(&b); err != nil {
+		t.Fatalf("Dump failed: %v", err)
+	}
+	got := b.String()
+	if !strings.Contains(got, fmt.Sprint(value)) {
+		t.Errorf("got %q must contain %q", got, value)
 	}
 }

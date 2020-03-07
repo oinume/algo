@@ -16,7 +16,7 @@ type Dumper interface {
 	Dump(w io.Writer) error
 }
 
-type entry struct {
+type item struct {
 	value int
 	age   int
 }
