@@ -1,10 +1,12 @@
-package hash_table
+package hash_table_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/oinume/algo/datastructure/hash_table"
 )
 
 //type hashable struct {
@@ -33,10 +35,14 @@ import (
 //}
 
 func TestHashTableChaining_Put(t *testing.T) {
-	a := assert.New(t)
-	hashTable := NewChaining(10)
-	a.Nil(hashTable.Put(1, 1))
-	a.Equal(1, hashTable.Size())
+	h := hash_table.NewChaining(10)
+	_, err := h.Put(1, 1)
+	if err != nil {
+		t.Fatalf("Put: unexpected error: %v", err)
+	}
+	if got, want := 1, h.Size(); got != want {
+		t.Fatalf("unexpected Size: got=%v, want=%v", got, want)
+	}
 }
 
 func TestHashTableChaining_Put_Collision(t *testing.T) {
