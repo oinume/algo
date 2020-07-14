@@ -3,10 +3,8 @@ package hash_table_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-
 	"github.com/oinume/algo/datastructure/hash_table"
+	"github.com/oinume/algo/testings"
 )
 
 //type hashable struct {
@@ -35,68 +33,69 @@ import (
 //}
 
 func TestHashTableChaining_Put(t *testing.T) {
-	h := hash_table.NewChaining(10)
-	_, err := h.Put(1, 1)
+	table := hash_table.NewChaining(10)
+	_, err := table.Put(1, 1)
 	if err != nil {
 		t.Fatalf("Put: unexpected error: %v", err)
 	}
-	if got, want := 1, h.Size(); got != want {
-		t.Fatalf("unexpected Size: got=%v, want=%v", got, want)
-	}
+	testings.AssertEqual(t, 1, table.Size(), "table.Size()")
 }
 
 func TestHashTableChaining_Put_Collision(t *testing.T) {
-	a := assert.New(t)
-	r := require.New(t)
-
-	table := NewChaining(10)
+	table := hash_table.NewChaining(10)
 	_, _ = table.Put("abc", "ABC")
 	_, _ = table.Put("cba", "CBA")
-	a.Equal(2, table.Size())
+	testings.AssertEqual(t, 2, table.Size(), "table.Size()")
 
-	actual, err := table.Get("cba")
-	r.NoError(err)
-	a.Equal("CBA", actual)
+	got, err := table.Get("cba")
+	if err != nil {
+		t.Fatalf("Get returns unexpected error: %v", err)
+	}
+	testings.AssertEqual(t, "CBA", got, "table.Get()")
 }
 
 func TestHashTableChaining_Put_Collision_Exists(t *testing.T) {
-	a := assert.New(t)
-	r := require.New(t)
-
-	table := NewChaining(10)
+	table := hash_table.NewChaining(10)
 	_, _ = table.Put("abc", "ABC")
 	_, _ = table.Put("abc", "AABBCC")
 	_, _ = table.Put("cba", "CBA")
-	a.Equal(2, table.Size())
+	testings.AssertEqual(t, 2, table.Size(), "table.Size()")
 
-	actual, err := table.Get("abc")
-	r.NoError(err)
-	a.Equal("AABBCC", actual)
+	got, err := table.Get("abc")
+	if err != nil {
+		t.Fatalf("Get returns unexpected error: %v", err)
+	}
+	testings.AssertEqual(t, "AABBCC", got, "table.Get()")
 }
 
 func TestHashTableChaining_Get(t *testing.T) {
-	a := assert.New(t)
-	r := require.New(t)
-	hashMap := NewChaining(10)
-	_, err := hashMap.Put(1, 1)
-	r.NoError(err)
-	value, err := hashMap.Get(1)
-	a.NoError(err)
-	a.Equal(1, value)
+	table := hash_table.NewChaining(10)
+	_, err := table.Put(1, 1)
+	if err != nil {
+		t.Fatalf("Put returns unexpected error: %v", err)
+	}
+	got, err := table.Get(1)
+	if err != nil {
+		t.Fatalf("Get returns unexpected error: %v", err)
+	}
+	testings.AssertEqual(t, 1, got, "table.Get()")
 }
 
 func TestHashTableChaining_Remove(t *testing.T) {
-	a := assert.New(t)
-	r := require.New(t)
-	hashMap := NewChaining(10)
+	table := hash_table.NewChaining(10)
 
-	_, err := hashMap.Put(1, 1)
-	r.NoError(err)
-	value, err := hashMap.Remove(1)
-	r.NoError(err)
-	a.Equal(1, value)
-	a.Equal(0, hashMap.Size())
+	_, err := table.Put(1, 1)
+	if err != nil {
+		t.Fatalf("Put returns unexpected error: %v", err)
+	}
+	removed, err := table.Remove(1)
+	if err != nil {
+		t.Fatalf("Remove returns unexpected error: %v", err)
+	}
+	testings.AssertEqual(t, 1, removed, "table.Remove()")
+	testings.AssertEqual(t, 0, table.Size(), "table must be empty")
 
-	_, err = hashMap.Remove(100)
-	a.Error(err)
+	if _, err := table.Remove(100); err == nil {
+		t.Fatalf("Remove must return err but nil")
+	}
 }
