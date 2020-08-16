@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /go/src/github.com/oinume/algo
     docker:
-      - image: golang:1.14-buster
+      - image: golang:1.15-buster
         environment:
           - GO111MODULE: "on"
     steps:
@@ -15,13 +15,13 @@ jobs:
             git config --global url."https://github.com".insteadOf git://github.com
             git config --global http.https://gopkg.in.followRedirects true
       - restore_cache:
-          key: go-mod-{{ checksum "go.sum" }}
+          key: go-mod-v1-{{ checksum "go.sum" }}
       - run:
           name: "Install dependencies"
           command: |
             go mod download
       - save_cache:
-          key: go-mod-{{ checksum "go.sum" }}
+          key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
             - "/go/pkg/mod"
       - run:
