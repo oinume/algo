@@ -4,6 +4,7 @@ LINT_TOOLS=\
 	github.com/kisielk/errcheck \
 	honnef.co/go/tools/cmd/staticcheck
 
+GO_TEST_OPTIONS = "-race -v"
 LINT_PACKAGES = $(shell go list ./...)
 FORMAT_PACKAGES = $(foreach pkg,$(LINT_PACKAGES),$(shell go env GOPATH)/src/$(pkg))
 
@@ -13,6 +14,14 @@ bootstrap-lint-tool:
 		echo "Installing/Updating $$tool" ; \
 		GO111MODULE=on go install $$tool; \
 	done
+
+.PHONY: test
+test:
+	go test $(GO_TEST_OPTION) ./...
+
+.PHONY: coverage
+coverage:
+	go test $(GO_TEST_OPTION) -coverpkg=./... -coverprofile=coverage.txt -covermode=atomic ./...
 
 .PHONY: lint
 lint: fmt vet staticcheck errcheck

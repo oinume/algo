@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GOPATH: /home/runner/work/go
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: ${{ env.GOPATH }}/pkg/mod
+          key: ${{ runner.os }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - uses: actions/setup-go@v2
+        with:
+          go-version: "1.16"
+      - name: Install lint tools
+        run: |
+          make bootstrap-lint-tool
+      - name: Run lint
+        run: |
+            make lint
+      - name: Run test
+        run: |
+          make coverage GO_TEST_OPTIONS="-v"
+      - name: Upload coverage to codecov
+        uses: codecov/codecov-action@a1ed4b322b4b38cb846afb5a0ebfa17086917d27
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.txt
+          fail_ci_if_error: false
