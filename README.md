@@ -6,7 +6,7 @@ Studying algorithms and data structures with Go.
 
 ## Requirements
 
-- Go 1.11 or later
+- Go 1.13 or later
 
 ## Set up
 
