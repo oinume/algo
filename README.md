@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/oinume/algo/tree/master.svg?style=svg)](https://circleci.com/gh/oinume/algo/tree/master)
+[![CI](https://github.com/oinume/algo/workflows/ci/badge.svg)](https://github.com/oinume/algo/actions)
 [![codecov](https://codecov.io/gh/oinume/algo/branch/master/graph/badge.svg)](https://codecov.io/gh/oinume/algo)
 
 # algo
