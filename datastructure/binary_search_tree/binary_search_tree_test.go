@@ -1,6 +1,7 @@
 package binary_search_tree
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,17 +9,14 @@ import (
 )
 
 func TestNewTree(t *testing.T) {
-	a := assert.New(t)
-
 	root := NewNode(100)
 	tree := NewTree(NewNode(100))
-	a.Equal(tree.Root(), root)
+	if got, want := tree.Root(), root; !reflect.DeepEqual(got, want) {
+		t.Errorf("tree.Root() returns unexpected value: got=%v, want=%v", got, want)
+	}
 }
 
 func TestTree_Find(t *testing.T) {
-	a := assert.New(t)
-	r := require.New(t)
-
 	tree := NewTree(NewNode(5))
 	left := NewNode(3)
 	tree.root.left = left
@@ -34,14 +32,20 @@ func TestTree_Find(t *testing.T) {
 		}
 		for _, test := range tests {
 			got, err := tree.Find(test.input)
-			r.NoError(err)
-			a.Equal(test.want, got)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got != test.want {
+				t.Errorf("unexpected value: got=%v, want=%v", got, test.want)
+			}
 		}
 	})
 
 	t.Run("not found", func(t *testing.T) {
 		_, err := tree.Find(100)
-		r.Equal(ErrNotFound, err)
+		if err != ErrNotFound {
+			t.Errorf("tree.Find must return ErrNotFound")
+		}
 	})
 }
 
