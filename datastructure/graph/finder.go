@@ -85,3 +85,40 @@ func (dfs *dfsLoopFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor 
 
 	return false
 }
+
+// bfsRecursiveFinder is breadth first search finder
+type bfsRecursiveFinder struct {
+	visited map[*Vertex]struct{}
+}
+
+func NewBFSRecursiveFinder() Finder {
+	return &bfsRecursiveFinder{
+		visited: make(map[*Vertex]struct{}, 100),
+	}
+}
+
+func (dfs *bfsRecursiveFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor Visitor) bool {
+	//fmt.Printf("Find(): start = %+v\n", start)
+	visitor.Visit(g, start)
+
+	if start.IsEqual(target) {
+		return true
+	}
+	if _, visited := dfs.visited[start]; visited {
+		return false
+	}
+
+	dfs.visited[start] = struct{}{}
+	edges := g.Edges(start)
+	//fmt.Printf("edges = %+v\n", edges)
+	for _, edge := range edges {
+		if _, visited := dfs.visited[edge.end]; visited {
+			continue
+		}
+		if result := dfs.Find(g, edge.end, target, visitor); result {
+			return result
+		}
+	}
+
+	return false
+}
