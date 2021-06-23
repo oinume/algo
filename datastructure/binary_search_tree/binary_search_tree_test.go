@@ -3,22 +3,22 @@ package binary_search_tree
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"github.com/google/go-cmp/cmp"
+
+	"github.com/oinume/algo/testings"
 )
 
-func TestNewTree(t *testing.T) {
-	a := assert.New(t)
+var cmpOptions = []cmp.Option{
+	cmp.AllowUnexported(Node{}, Tree{}),
+}
 
+func TestNewTree(t *testing.T) {
 	root := NewNode(100)
 	tree := NewTree(NewNode(100))
-	a.Equal(tree.Root(), root)
+	testings.AssertEqual(t, root, tree.Root(), "unexpected tree root", cmpOptions...)
 }
 
 func TestTree_Find(t *testing.T) {
-	a := assert.New(t)
-	r := require.New(t)
-
 	tree := NewTree(NewNode(5))
 	left := NewNode(3)
 	tree.root.left = left
@@ -34,20 +34,20 @@ func TestTree_Find(t *testing.T) {
 		}
 		for _, test := range tests {
 			got, err := tree.Find(test.input)
-			r.NoError(err)
-			a.Equal(test.want, got)
+			if err != nil {
+				t.Fatalf("tree.Find returns unexpected error: %v", err)
+			}
+			testings.AssertEqual(t, test.want, got, "tree.Find returns unexpected node", cmpOptions...)
 		}
 	})
 
 	t.Run("not found", func(t *testing.T) {
 		_, err := tree.Find(100)
-		r.Equal(ErrNotFound, err)
+		testings.AssertEqual(t, ErrNotFound.Error(), err.Error(), "err must be ErrNotFound")
 	})
 }
 
 func TestTree_Insert(t *testing.T) {
-	a := assert.New(t)
-	r := require.New(t)
 	tests := []struct {
 		insert       int64
 		want         *Node
@@ -102,26 +102,23 @@ func TestTree_Insert(t *testing.T) {
 	for _, test := range tests {
 		node, err := tree.Insert(test.insert)
 		if err != nil {
-			r.NoError(err, "tree.Insert failed")
+			t.Fatalf("tree.Insert failed: %v", err)
 		}
-		a.Equal(test.want.Value(), node.Value())
-		a.Equal(test.wantTreeFunc(), tree)
+		testings.AssertEqual(t, test.want.Value(), node.Value(), "")
+		testings.AssertEqual(t, test.wantTreeFunc(), tree, "", cmpOptions...)
 	}
 }
 
 func TestTree_Insert_Exist(t *testing.T) {
-	r := require.New(t)
 	tree := NewTree(NewNode(5))
 	tree.root.left = NewNode(3)
 	tree.root.right = NewNode(6)
 
 	_, err := tree.Insert(6)
-	r.Equal(ErrAlreadyExists, err)
+	testings.AssertEqual(t, ErrAlreadyExists.Error(), err.Error(), "err must be ErrAlreadyExists")
 }
 
 func TestTree_Remove(t *testing.T) {
-	a := assert.New(t)
-	r := require.New(t)
 	tests := map[string]struct {
 		setupTree        func() *Tree
 		target           int64
@@ -268,21 +265,21 @@ func TestTree_Remove(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			tree := test.setupTree()
 			got, err := tree.Remove(test.target)
-			r.NoError(err, "target is %v", test.target)
-			a.Equal(test.target, got.Value())
-			a.Equal(test.removedAfterTree(), tree)
+			if err != nil {
+				t.Fatalf("target is %v", test.target)
+			}
+			testings.AssertEqual(t, test.target, got.Value(), "", cmpOptions...)
+			testings.AssertEqual(t, test.removedAfterTree(), tree, "", cmpOptions...)
 		})
 	}
 }
 
 func TestTree_Remove_NotFound(t *testing.T) {
-	a := assert.New(t)
-
 	tree := NewTree(NewNode(5))
 	tree.root.left = NewNode(3)
 	tree.root.right = NewNode(6)
 	tree.root.right.right = NewNode(10)
 
 	_, err := tree.Remove(15)
-	a.Equal(ErrNotFound, err)
+	testings.AssertEqual(t, ErrNotFound.Error(), err.Error(), "err must be ErrNotFound")
 }
