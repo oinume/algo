@@ -8,8 +8,6 @@ import (
 
 // AssertEqual ensures that got and want are equal by cmp.Diff.
 // If they are not equal, it reports failure by t.Errorf with given `message`.
-// If options are empty, it applies default options, which are defined in `defaultCmpOptions`.
-// If any options are given, `defaultCmpOptions` are not applied.
 func AssertEqual(t *testing.T, want, got interface{}, message string, options ...cmp.Option) {
 	t.Helper()
 	if diff := cmp.Diff(want, got, options...); diff != "" {
@@ -23,8 +21,6 @@ func AssertEqual(t *testing.T, want, got interface{}, message string, options ..
 
 // RequireEqual ensures that got and want are equal by cmp.Diff.
 // If they are not equal, it reports failure by t.Fatalf with given `message`.
-// If options are empty, it applies default options, which are defined in `defaultCmpOptions`.
-// If any options are given, `defaultCmpOptions` are not applied.
 func RequireEqual(t *testing.T, want, got interface{}, message string, options ...cmp.Option) {
 	t.Helper()
 	if diff := cmp.Diff(want, got, options...); diff != "" {
