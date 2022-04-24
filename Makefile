@@ -24,21 +24,5 @@ coverage:
 	go test $(GO_TEST_OPTION) -coverpkg=./... -coverprofile=coverage.txt -covermode=atomic ./...
 
 .PHONY: lint
-lint: fmt vet staticcheck errcheck
-
-.PHONY: fmt
-fmt:
-	goimports -l $(FORMAT_PACKAGES) | grep -E '.'; test $$? -eq 1
-	gofmt -l $(FORMAT_PACKAGES) | grep -E '.'; test $$? -eq 1
-
-.PHONY: vet
-vet:
-	go vet -v $(LINT_PACKAGES)
-
-.PHONY: staticcheck
-staticcheck:
-	staticcheck $(LINT_PACKAGES)
-
-.PHONY: errcheck
-errcheck:
-	errcheck -ignore 'fmt:[FS]?[Pp]rint*' -exclude .errcheckignore $(LINT_PACKAGES)
+lint:
+	docker run --rm -v $(shell pwd):/app -w /app golangci/golangci-lint:v1.45.2 golangci-lint run /app/...
