@@ -8,47 +8,49 @@ var (
 	ErrEmptyStack = fmt.Errorf("stack is empty")
 )
 
-type Stack struct {
-	data     []interface{}
+type Stack[T any] struct {
+	data     []T
 	capacity int
 }
 
-func New(capacity int) *Stack {
+func New[T any](capacity int) *Stack[T] {
 	if capacity <= 0 {
 		panic("must be 'capacity' > 0")
 	}
-	data := make([]interface{}, 0, capacity)
-	return &Stack{data: data, capacity: capacity}
+	data := make([]T, 0, capacity)
+	return &Stack[T]{data: data, capacity: capacity}
 }
 
-func (s *Stack) Push(v interface{}) {
+func (s *Stack[T]) Push(v T) {
 	s.data = append(s.data, v)
 }
 
-func (s *Stack) Pop() (interface{}, error) {
+func (s *Stack[T]) Pop() (T, error) {
 	if s.Size() == 0 {
-		return nil, ErrEmptyStack
+		var ret T
+		return ret, ErrEmptyStack
 	}
 	v := s.data[len(s.data)-1]
 	s.data = s.data[:len(s.data)-1]
 	return v, nil
 }
 
-func (s *Stack) Peek() (interface{}, error) {
+func (s *Stack[T]) Peek() (T, error) {
 	if s.Size() == 0 {
-		return nil, ErrEmptyStack
+		var ret T
+		return ret, ErrEmptyStack
 	}
 	return s.data[len(s.data)-1], nil
 }
 
-func (s *Stack) Size() int {
+func (s *Stack[T]) Size() int {
 	return len(s.data)
 }
 
-func (s *Stack) Clear() {
-	s.data = make([]interface{}, 0, s.capacity)
+func (s *Stack[T]) Clear() {
+	s.data = make([]T, 0, s.capacity)
 }
 
-func (s *Stack) IsEmpty() bool {
+func (s *Stack[T]) IsEmpty() bool {
 	return s.Size() == 0
 }
