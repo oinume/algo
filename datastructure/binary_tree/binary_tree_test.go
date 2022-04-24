@@ -3,7 +3,7 @@ package binary_tree
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/oinume/algo/testings"
 )
 
 type visitor1 struct {
@@ -24,8 +24,7 @@ func TestBinaryTreeNodeTraversePreorder(t *testing.T) {
 	}
 	root.TraversePreorder(v1, 1)
 
-	assert := assert.New(t)
-	assert.Equal([]interface{}{1, 2, 3, 100}, v1.visited)
+	testings.AssertEqual(t, []interface{}{1, 2, 3, 100}, v1.visited, "")
 }
 
 type visitor2 struct {
@@ -46,8 +45,7 @@ func TestBinaryTreeNodeTraverseInorder(t *testing.T) {
 	}
 	root.TraverseInorder(v2, 1)
 
-	assert := assert.New(t)
-	assert.Equal([]interface{}{2, 1, 100, 3}, v2.visited)
+	testings.AssertEqual(t, []interface{}{2, 1, 100, 3}, v2.visited, "")
 }
 
 type visitor3 struct {
@@ -68,8 +66,7 @@ func TestBinaryTreeNodeTraversePostorder(t *testing.T) {
 	}
 	root.TraversePostorder(v3, 1)
 
-	assert := assert.New(t)
-	assert.Equal([]interface{}{2, 100, 3, 1}, v3.visited)
+	testings.AssertEqual(t, []interface{}{2, 100, 3, 1}, v3.visited, "")
 }
 
 // Create a binary tree nodes following form.
