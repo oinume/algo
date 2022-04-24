@@ -56,17 +56,16 @@ func NewDFSLoopFinder() Finder {
 }
 
 func (dfs *dfsLoopFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor Visitor) bool {
-	st := stack.New(g.vertices.Size())
+	st := stack.New[*Vertex](g.vertices.Size())
 	st.Push(start)
 
 	for !st.IsEmpty() {
-		v, err := st.Pop()
+		vertex, err := st.Pop()
 		if err != nil {
 			// Must not reach here
 			return false
 		}
 
-		vertex := v.(*Vertex)
 		//fmt.Printf("vertex:%v, edges=%+v\n", vertex, g.Edges(vertex))
 		visitor.Visit(g, vertex)
 		if vertex.IsEqual(target) {

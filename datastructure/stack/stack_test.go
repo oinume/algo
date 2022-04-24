@@ -5,7 +5,7 @@ import (
 )
 
 func TestStack_Push(t *testing.T) {
-	stack := New(10)
+	stack := New[int](10)
 	stack.Push(1)
 	stack.Push(2)
 	if got, want := stack.Size(), 2; got != want {
@@ -14,7 +14,7 @@ func TestStack_Push(t *testing.T) {
 }
 
 func TestStack_Pop(t *testing.T) {
-	stack := New(10)
+	stack := New[int](10)
 	stack.Push(1)
 	stack.Push(2)
 	stack.Push(3)
