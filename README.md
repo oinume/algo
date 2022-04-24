@@ -6,15 +6,11 @@ Studying algorithms and data structures with Go.
 
 ## Requirements
 
-- Go 1.13 or later
+- Go 1.18 or later
 
 ## Set up
 
 You need to enable env variables related to go modules.
-
-```$bash
-$ source .envrc
-```
 
 ## Run
 
