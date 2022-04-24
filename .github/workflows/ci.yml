@@ -30,15 +30,12 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.version }}
-      - name: Install lint tools
-        run: |
-          make bootstrap-lint-tool
       - name: Run lint
         run: |
             make lint
       - name: Run test
         run: |
-          make coverage GO_TEST_OPTIONS="-v"
+          make coverage
       - name: Upload coverage to codecov
         uses: codecov/codecov-action@a1ed4b322b4b38cb846afb5a0ebfa17086917d27
         with:
