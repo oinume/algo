@@ -1,0 +1,68 @@
+---
+run:
+  # timeout for analysis, e.g. 30s, 5m, default is 1m
+  timeout: 5m
+
+linters:
+  disable-all: true
+  enable:
+    - gofmt
+    - goimports
+    - misspell
+  fast: false
+
+#linters:
+#  disable-all: true
+#  enable:
+#    - bodyclose
+#    - deadcode
+#    - depguard
+#    - dupl
+#    - errcheck
+#    - funlen
+#    - gochecknoinits
+#    - goconst
+#    - gocritic
+#    - gocyclo
+#    - gofmt
+#    - goimports
+#    - gosec
+#    - gosimple
+#    - govet
+#    - ineffassign
+#    - lll
+#    - misspell
+#    - nakedret
+#    - prealloc
+#    - staticcheck
+#    - structcheck
+#    - stylecheck
+#    - typecheck
+#    - unconvert
+#    - unparam
+#    - unused
+#    - varcheck
+
+linters-settings:
+  goimports:
+    local-prefixes: github.com/oinume/algo
+
+issues:
+  exclude-rules:
+
+#linters-settings:
+#  errcheck:
+#    check-type-asserts: true
+#    check-blank: true
+#    ignore: fmt:.*,github.com/favclip/testerator:SpinDown
+#  goimports:
+#    local-prefixes: github.com/drs-prime/beer-server
+#  misspell:
+#    locale: US
+#  lll:
+#    line-length: 140
+#  funlen:
+#    lines: 150
+#    statements: 70
+#  dupl:
+#    threshold: 400

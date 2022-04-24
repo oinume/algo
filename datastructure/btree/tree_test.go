@@ -60,7 +60,7 @@ func TestTree_Find(t *testing.T) {
 	//tree.Dump(os.Stdout)
 	_, index, err := tree.Find(3)
 	if err != nil {
-		t.Fatalf("tree.Find must succeeed: %v", err)
+		t.Fatalf("tree.Find must succeed: %v", err)
 	}
 	if got, want := index, 1; got != want {
 		t.Errorf("unexpected index returned: got=%v, want=%v", got, want)

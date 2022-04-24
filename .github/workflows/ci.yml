@@ -16,30 +16,26 @@ jobs:
       max-parallel: 2
       matrix:
         version:
-          - 1.13
-          - 1.16
+          - 1.18
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v2
-      - uses: actions/cache@v2
+        uses: actions/checkout@v3
+      - uses: actions/cache@v3
         id: cache
         with:
           path: ${{ env.GOPATH }}/pkg/mod
           key: ${{ runner.os }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.version }}
-      - name: Install lint tools
-        run: |
-          make bootstrap-lint-tool
       - name: Run lint
         run: |
             make lint
       - name: Run test
         run: |
-          make coverage GO_TEST_OPTIONS="-v"
+          make coverage
       - name: Upload coverage to codecov
         uses: codecov/codecov-action@a1ed4b322b4b38cb846afb5a0ebfa17086917d27
         with:
