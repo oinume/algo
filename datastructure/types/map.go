@@ -10,3 +10,10 @@ type Map interface {
 type Hashable interface {
 	HashCode() int
 }
+
+type GenericMap[K Hashable, V] interface {
+	Put(key K, value V) (V, error)
+	Get(key K) (V, error)
+	Size() int
+	Remove(key K) (V, error)
+}
