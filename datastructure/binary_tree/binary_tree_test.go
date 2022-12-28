@@ -69,13 +69,14 @@ func TestBinaryTreeNodeTraversePostorder(t *testing.T) {
 	testings.AssertEqual(t, []interface{}{2, 100, 3, 1}, v3.visited, "")
 }
 
+// nolint:gofmt
 // Create a binary tree nodes following form.
 //
-//       1
-//    ／    ＼
-//   2       3
-//         ／
-//       100
+//	    1
+//	 ／    ＼
+//	2       3
+//	      ／
+//	    100
 func createBinaryTree() *BinaryTreeNode {
 	root := &BinaryTreeNode{Value: 1}
 	root.Left = &BinaryTreeNode{Value: 2}

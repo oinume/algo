@@ -64,10 +64,11 @@ func (t *Tree) Find(target int64) (*Node, error) {
 	return nil, ErrNotFound
 }
 
+//nolint:gofmt
 /*
-      5
-    ／  ＼
-   3     6
+	     5
+	   ／  ＼
+	  3     6
 
 Want to insert `4`
 
