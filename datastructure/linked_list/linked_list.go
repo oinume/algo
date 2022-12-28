@@ -121,9 +121,10 @@ func (l *linkedList) Iterator() types.Iterator {
 	return &linkedListIterator{cursor: l.head}
 }
 
-//
-// Iterator
-//
+/*
+ * Iterator
+ */
+
 type linkedListIterator struct {
 	cursor *element
 }
