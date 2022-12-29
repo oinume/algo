@@ -122,17 +122,17 @@ func (l *linkedList[T]) First() (T, error) {
 }
 
 func (l *linkedList[T]) Iterator() types.Iterator[T] {
-	return &genericLinkedListIterator[T]{cursor: l.head}
+	return &linkedListIterator[T]{cursor: l.head}
 }
 
 /*
  * Iterator
  */
-type genericLinkedListIterator[T any] struct {
+type linkedListIterator[T any] struct {
 	cursor *element[T]
 }
 
-func (i *genericLinkedListIterator[T]) Next() (T, error) {
+func (i *linkedListIterator[T]) Next() (T, error) {
 	if i.HasNext() {
 		data := i.cursor.next.data
 		i.cursor = i.cursor.next
@@ -143,11 +143,11 @@ func (i *genericLinkedListIterator[T]) Next() (T, error) {
 	}
 }
 
-func (i *genericLinkedListIterator[T]) HasNext() bool {
+func (i *linkedListIterator[T]) HasNext() bool {
 	return i.cursor.next != nil
 }
 
-func (i *genericLinkedListIterator[T]) Remove() (T, error) {
+func (i *linkedListIterator[T]) Remove() (T, error) {
 	data := i.cursor.data
 	// TODO: Fix invalid operation: data == nil (mismatched types T and untyped nil)
 	//if data == nil {
