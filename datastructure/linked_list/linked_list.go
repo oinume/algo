@@ -6,12 +6,12 @@ import (
 	"github.com/oinume/algo/datastructure/types"
 )
 
-type element struct {
-	data interface{}
-	next *element
+type element[T any] struct {
+	data T
+	next *element[T]
 }
 
-func (e *element) String() string {
+func (e *element[T]) String() string {
 	if e.next != nil {
 		return fmt.Sprintf("{data: %v, next: %v}", e.data, e.next.data)
 	} else {
@@ -19,42 +19,43 @@ func (e *element) String() string {
 	}
 }
 
-type linkedList struct {
-	head *element
+type linkedList[T any] struct {
+	head *element[T]
 }
 
-var _ types.List = (*linkedList)(nil)
+// var _ types.GenericList = (*linkedList)(nil)
 
-func NewLinkedList() types.List {
-	return &linkedList{
-		head: &element{
-			data: nil,
+func NewLinkedList[T any]() types.List[T] {
+	var data T
+	return &linkedList[T]{
+		head: &element[T]{
+			data: data,
 			next: nil,
 		},
 	}
 }
 
-func (l *linkedList) Add(v interface{}) {
+func (l *linkedList[T]) Add(v T) {
 	last := l.head
 	for e := l.head.next; e != nil; e = e.next {
 		last = e
 	}
-	last.next = &element{data: v, next: nil}
+	last.next = &element[T]{data: v, next: nil}
 }
 
-func (l *linkedList) Insert(index int, v interface{}) {
+func (l *linkedList[T]) Insert(index int, v T) {
 	current := 0
 	for e := l.head.next; e != nil; e = e.next {
 		if current == index {
 			next := e.next
-			e.next = &element{data: v, next: next}
+			e.next = &element[T]{data: v, next: next}
 			break
 		}
 		current++
 	}
 }
 
-func (l *linkedList) Size() int {
+func (l *linkedList[T]) Size() int {
 	// TODO: This code is too slow
 	size := 0
 	for e := l.head.next; e != nil; e = e.next {
@@ -63,9 +64,10 @@ func (l *linkedList) Size() int {
 	return size
 }
 
-func (l *linkedList) Set(index int, v interface{}) (interface{}, error) {
+func (l *linkedList[T]) Set(index int, v T) (T, error) {
 	if index >= l.Size() {
-		return nil, types.ErrorIndexOutOfRange
+		var empty T
+		return empty, types.ErrorIndexOutOfRange
 	}
 
 	i := 0
@@ -82,15 +84,15 @@ func (l *linkedList) Set(index int, v interface{}) (interface{}, error) {
 	oldValue := current.data
 	next := current.next
 	current.next = nil
-	newElement := &element{data: v, next: next}
+	newElement := &element[T]{data: v, next: next}
 	prev.next = newElement
 
 	return oldValue, nil
 }
 
-func (l *linkedList) Remove(v interface{}) bool {
+func (l *linkedList[T]) Remove(v T) bool {
 	prev := l.head
-	var target *element = nil
+	var target *element[T] = nil
 	for e := l.head; e != nil; e = e.next {
 		if fmt.Sprint(e.data) == fmt.Sprint(v) { // TODO: Equals
 			target = e
@@ -103,51 +105,55 @@ func (l *linkedList) Remove(v interface{}) bool {
 		return false
 	}
 	prev.next = target.next
-	target.data = nil
+	var empty T
+	target.data = empty
 	target.next = nil
 	//fmt.Printf("target = %+v, prev = %+v\n", target, prev)
 
 	return true
 }
 
-func (l *linkedList) First() (interface{}, error) {
+func (l *linkedList[T]) First() (T, error) {
 	if l.head.next != nil {
 		return l.head.next.data, nil
 	}
-	return nil, fmt.Errorf("empty list")
+	var empty T
+	return empty, fmt.Errorf("empty list")
 }
 
-func (l *linkedList) Iterator() types.Iterator {
-	return &linkedListIterator{cursor: l.head}
+func (l *linkedList[T]) Iterator() types.Iterator[T] {
+	return &linkedListIterator[T]{cursor: l.head}
 }
 
 /*
  * Iterator
  */
-
-type linkedListIterator struct {
-	cursor *element
+type linkedListIterator[T any] struct {
+	cursor *element[T]
 }
 
-func (i *linkedListIterator) Next() (interface{}, error) {
+func (i *linkedListIterator[T]) Next() (T, error) {
 	if i.HasNext() {
 		data := i.cursor.next.data
 		i.cursor = i.cursor.next
 		return data, nil
 	} else {
-		return nil, fmt.Errorf("no next element")
+		var empty T
+		return empty, fmt.Errorf("no next element")
 	}
 }
 
-func (i *linkedListIterator) HasNext() bool {
+func (i *linkedListIterator[T]) HasNext() bool {
 	return i.cursor.next != nil
 }
 
-func (i *linkedListIterator) Remove() (interface{}, error) {
+func (i *linkedListIterator[T]) Remove() (T, error) {
 	data := i.cursor.data
-	if data == nil {
-		return nil, fmt.Errorf("no current object")
-	}
+	// TODO: Fix invalid operation: data == nil (mismatched types T and untyped nil)
+	//if data == nil {
+	//	var empty T
+	//	return empty, fmt.Errorf("no current object")
+	//}
 	if i.HasNext() {
 		i.cursor = i.cursor.next
 	}
