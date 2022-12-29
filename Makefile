@@ -11,3 +11,7 @@ coverage:
 .PHONY: lint
 lint:
 	@docker run --rm -v $(shell pwd):/app -w /app golangci/golangci-lint:v1.50.1 golangci-lint run /app/...
+
+.PHONY: lint-fix
+lint-fix:
+	@docker run --rm -v $(shell pwd):/app -w /app golangci/golangci-lint:v1.50.1 golangci-lint run --fix /app/...
