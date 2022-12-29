@@ -125,9 +125,9 @@ func (l *genericLinkedList[T]) Iterator() types.GenericIterator[T] {
 	return &genericLinkedListIterator[T]{cursor: l.head}
 }
 
-//
-// Iterator
-//
+/*
+ * Iterator
+ */
 type genericLinkedListIterator[T any] struct {
 	cursor *genericElement[T]
 }
