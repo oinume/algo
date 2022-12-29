@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func TestLinkedList_Add(t *testing.T) {
-	list := NewLinkedList()
+func Test_linkedList_Add(t *testing.T) {
+	list := NewLinkedList[int]()
 	list.Add(1)
 	list.Add(2)
 	list.Add(4)
@@ -16,28 +16,28 @@ func TestLinkedList_Add(t *testing.T) {
 	}
 }
 
-func TestLinkedList_Insert(t *testing.T) {
-	list := NewLinkedList()
+func Test_linkedList_Insert(t *testing.T) {
+	list := NewLinkedList[int]()
 	list.Add(1)
 	list.Add(2)
 	list.Add(4)
 	list.Insert(1, 3)
 
-	want := NewLinkedList()
+	wantList := NewLinkedList[int]()
 	for i := 1; i <= 4; i++ {
-		want.Add(i)
+		wantList.Add(i)
 	}
 
 	if got, want := list.Size(), 4; got != want {
 		t.Errorf("unexpected size: got=%v, want=%v", got, want)
 	}
-	if !reflect.DeepEqual(list, want) {
-		t.Errorf("unexpected linked list structure: got=%+v, want=%v", list, want)
+	if !reflect.DeepEqual(list, wantList) {
+		t.Errorf("unexpected linked list structure: got=%+v, want=%v", list, wantList)
 	}
 }
 
-func TestLinkedList_Set(t *testing.T) {
-	list := NewLinkedList()
+func Test_linkedList_Set(t *testing.T) {
+	list := NewLinkedList[int]()
 	for i := 1; i <= 3; i++ {
 		list.Add(i)
 	}
@@ -82,8 +82,8 @@ func TestLinkedList_Set(t *testing.T) {
 	}
 }
 
-func TestLinkedList_Remove(t *testing.T) {
-	list := NewLinkedList()
+func Test_linkedList_Remove(t *testing.T) {
+	list := NewLinkedList[int]()
 	for i := 1; i <= 3; i++ {
 		list.Add(i)
 	}
@@ -120,8 +120,8 @@ func TestLinkedList_Remove(t *testing.T) {
 	}
 }
 
-func TestLinkedListIterator_Remove(t *testing.T) {
-	list := NewLinkedList()
+func Test_linkedListIterator_Remove(t *testing.T) {
+	list := NewLinkedList[int]()
 	for i := 1; i <= 3; i++ {
 		list.Add(i)
 	}
