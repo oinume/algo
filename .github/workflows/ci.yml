@@ -16,7 +16,7 @@ jobs:
       max-parallel: 2
       matrix:
         version:
-          - 1.18
+          - 1.26
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
@@ -27,7 +27,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
           go-version: ${{ matrix.version }}
       - name: Run lint
