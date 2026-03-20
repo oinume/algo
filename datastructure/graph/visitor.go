@@ -1,27 +1,23 @@
 package graph
 
-type Visitor interface {
-	Visit(g *Graph, v *Node)
+type Visitor[T comparable] interface {
+	Visit(g *Graph[T], v *Node[T])
 }
 
-type nopVisitor struct{}
+type nopVisitor[T comparable] struct{}
 
-func (nv *nopVisitor) Visit(g *Graph, v *Node) {}
+func (nv *nopVisitor[T]) Visit(g *Graph[T], v *Node[T]) {}
 
-func (nv *nopVisitor) Visited() []*Node {
-	return nil
-}
-
-func NewListVisitor() Visitor {
-	return &listVisitor{
-		list: make([]*Node, 0, 100),
+func NewListVisitor[T comparable]() *listVisitor[T] {
+	return &listVisitor[T]{
+		list: make([]*Node[T], 0, 100),
 	}
 }
 
-type listVisitor struct {
-	list []*Node
+type listVisitor[T comparable] struct {
+	list []*Node[T]
 }
 
-func (lv *listVisitor) Visit(g *Graph, v *Node) {
+func (lv *listVisitor[T]) Visit(g *Graph[T], v *Node[T]) {
 	lv.list = append(lv.list, v)
 }
