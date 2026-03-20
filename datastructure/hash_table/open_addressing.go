@@ -1,30 +1,33 @@
 package hash_table
 
-import (
-	"fmt"
-	"reflect"
-
-	"github.com/oinume/algo/datastructure/types"
-)
+import "fmt"
 
 const defaultOpenAddressingMaxSize = 53
 
-type (
-	emptyKey   struct{}
-	removedKey struct{}
+type bucketState int
+
+const (
+	bucketStateEmpty   bucketState = iota
+	bucketStateNormal  bucketState = iota
+	bucketStateRemoved bucketState = iota
 )
 
-type openAddressing struct {
+type openAddressing[K comparable, V any] struct {
 	maxSize int
 	size    int
-	table   []*bucket
+	table   []*bucket[K, V]
 }
 
-type bucketKey struct {
-	data interface{}
+type bucketKey[K comparable] struct {
+	data  K
+	state bucketState
 }
 
-func (k *bucketKey) HashCode() int {
+func newEmptyBucketKey[K comparable]() *bucketKey[K] {
+	return &bucketKey[K]{state: bucketStateEmpty}
+}
+
+func (k *bucketKey[K]) HashCode() int {
 	result := 0
 	for _, s := range fmt.Sprint(k.data) {
 		result += int(s)
@@ -32,133 +35,117 @@ func (k *bucketKey) HashCode() int {
 	return result
 }
 
-func (k *bucketKey) isEmpty() bool {
-	if k.data == nil {
-		return true
-	}
-	if _, ok := k.data.(emptyKey); ok {
-		return true
-	}
-	return false
+func (k *bucketKey[K]) isEmpty() bool {
+	return k.state == bucketStateEmpty
 }
 
-func (k *bucketKey) isRemoved() bool {
-	if _, ok := k.data.(removedKey); ok {
-		return true
-	}
-	return false
+func (k *bucketKey[K]) isRemoved() bool {
+	return k.state == bucketStateRemoved
 }
 
-func (k *bucketKey) setRemoved() {
-	k.data = removedKey{}
+func (k *bucketKey[K]) setRemoved() {
+	k.state = bucketStateRemoved
 }
 
-type bucket struct {
-	key   *bucketKey
-	value interface{}
+type bucket[K comparable, V any] struct {
+	key   *bucketKey[K]
+	value V
 }
 
-func NewOpenAddressing() types.Map {
-	return NewOpenAddressingWithMaxSize(defaultOpenAddressingMaxSize)
+func NewOpenAddressing[K comparable, V any]() Map[K, V] {
+	return NewOpenAddressingWithMaxSize[K, V](defaultOpenAddressingMaxSize)
 }
 
-func NewOpenAddressingWithMaxSize(size int) types.Map {
-	table := make([]*bucket, size)
+func NewOpenAddressingWithMaxSize[K comparable, V any](size int) Map[K, V] {
+	table := make([]*bucket[K, V], size)
 	for i := 0; i < size; i++ {
-		table[i] = &bucket{
-			key:   &bucketKey{data: emptyKey{}},
-			value: nil,
+		table[i] = &bucket[K, V]{
+			key: newEmptyBucketKey[K](),
 		}
 	}
-	hashTable := &openAddressing{
+	return &openAddressing[K, V]{
 		maxSize: size,
 		table:   table,
 	}
-	return hashTable
 }
 
-func (h *openAddressing) Put(key interface{}, value interface{}) (interface{}, error) {
-	if key == nil {
-		return nil, ErrKeyMustNotBeNil
-	}
-
-	givenKey := &bucketKey{data: key}
+func (h *openAddressing[K, V]) Put(key K, value V) (V, error) {
+	var zero V
+	givenKey := &bucketKey[K]{data: key, state: bucketStateNormal}
 	index := h.hash(givenKey)
 	count := 0
 	for k := h.table[index].key; !k.isEmpty() && !k.isRemoved(); k = h.table[index].key {
-		if reflect.DeepEqual(givenKey.data, k.data) {
-			// Already exists, replace it with a new value
+		if k.data == key {
 			old := h.table[index].value
 			h.put(givenKey, value, index)
 			return old, nil
 		}
 		if count+1 > h.maxSize {
-			return nil, ErrHashTableIsFull
+			return zero, ErrHashTableIsFull
 		}
 		index = h.rehash(index)
 		count++
 	}
 	h.put(givenKey, value, index)
 	h.size++
-	return nil, nil
+	return zero, nil
 }
 
-func (h *openAddressing) put(key *bucketKey, value interface{}, index int) {
-	h.table[index] = &bucket{
+func (h *openAddressing[K, V]) put(key *bucketKey[K], value V, index int) {
+	h.table[index] = &bucket[K, V]{
 		key:   key,
 		value: value,
 	}
 }
 
-func (h *openAddressing) Get(key interface{}) (interface{}, error) {
+func (h *openAddressing[K, V]) Get(key K) (V, error) {
+	var zero V
 	count := 0
-	givenKey := &bucketKey{data: key}
+	givenKey := &bucketKey[K]{data: key, state: bucketStateNormal}
 	index := h.hash(givenKey)
-	// わかりにくいので for i := 0; i < h.maxSize; i++ {} にする
 	for k := h.table[index].key; !k.isEmpty() && !k.isRemoved(); k = h.table[index].key {
-		if reflect.DeepEqual(givenKey.data, k.data) {
-			// Found
+		if k.data == key {
 			return h.table[index].value, nil
 		}
 		if count+1 > h.maxSize {
-			return nil, ErrNotExists
+			return zero, ErrNotExists
 		}
 		index = h.rehash(index)
 		count++
 	}
-	return nil, ErrNotExists
+	return zero, ErrNotExists
 }
 
-func (h *openAddressing) Size() int {
+func (h *openAddressing[K, V]) Size() int {
 	return h.size
 }
 
-func (h *openAddressing) Remove(key interface{}) (interface{}, error) {
+func (h *openAddressing[K, V]) Remove(key K) (V, error) {
+	var zero V
 	count := 0
-	givenKey := &bucketKey{data: key}
+	givenKey := &bucketKey[K]{data: key, state: bucketStateNormal}
 	index := h.hash(givenKey)
 	for k := h.table[index].key; !k.isEmpty(); k = h.table[index].key {
-		if reflect.DeepEqual(givenKey.data, k.data) {
-			// Found
+		if k.data == key {
 			k.setRemoved()
 			removed := h.table[index].value
-			h.table[index].value = nil
+			h.table[index].value = zero
 			h.size--
 			return removed, nil
 		}
 		if count+1 > h.maxSize {
-			return nil, ErrNotExists
+			return zero, ErrNotExists
 		}
 		index = h.rehash(index)
 		count++
 	}
-	return nil, ErrNotExists
+	return zero, ErrNotExists
 }
 
-func (h *openAddressing) hash(key *bucketKey) int {
+func (h *openAddressing[K, V]) hash(key *bucketKey[K]) int {
 	return key.HashCode() % h.maxSize
 }
 
-func (h *openAddressing) rehash(hash int) int {
+func (h *openAddressing[K, V]) rehash(hash int) int {
 	return (hash + 1) % h.maxSize
 }

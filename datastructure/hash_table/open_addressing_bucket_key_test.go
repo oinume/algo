@@ -8,14 +8,14 @@ import (
 )
 
 func Test_bucketKey_isEmpty(t *testing.T) {
-	empty := &bucketKey{data: emptyKey{}}
+	empty := newEmptyBucketKey[string]()
 	testings.AssertEqual(t, true, empty.isEmpty(), "isEmpty")
 }
 
 func Test_bucketKey_HashCode(t *testing.T) {
 	tests := map[string]struct {
-		key1         interface{}
-		key2         interface{}
+		key1         any
+		key2         any
 		sameHashCode bool
 	}{
 		"same": {
@@ -35,7 +35,8 @@ func Test_bucketKey_HashCode(t *testing.T) {
 		},
 	}
 	for name, tt := range tests {
-		key1, key2 := &bucketKey{data: tt.key1}, &bucketKey{data: tt.key2}
+		key1 := &bucketKey[any]{data: tt.key1, state: bucketStateNormal}
+		key2 := &bucketKey[any]{data: tt.key2, state: bucketStateNormal}
 		testings.AssertEqual(
 			t,
 			tt.sameHashCode,
