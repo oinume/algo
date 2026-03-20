@@ -1,10 +1,10 @@
 package types
 
-type Map interface {
-	Put(key interface{}, value interface{}) (interface{}, error)
-	Get(key interface{}) (interface{}, error)
+type Map[K comparable, V any] interface {
+	Put(key K, value V) (V, error)
+	Get(key K) (V, error)
 	Size() int
-	Remove(key interface{}) (interface{}, error)
+	Remove(key K) (V, error)
 }
 
 type Hashable interface {

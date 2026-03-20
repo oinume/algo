@@ -1,6 +1,10 @@
 package hash_table
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/oinume/algo/datastructure/types"
+)
 
 const defaultOpenAddressingMaxSize = 53
 
@@ -52,11 +56,11 @@ type bucket[K comparable, V any] struct {
 	value V
 }
 
-func NewOpenAddressing[K comparable, V any]() Map[K, V] {
+func NewOpenAddressing[K comparable, V any]() types.Map[K, V] {
 	return NewOpenAddressingWithMaxSize[K, V](defaultOpenAddressingMaxSize)
 }
 
-func NewOpenAddressingWithMaxSize[K comparable, V any](size int) Map[K, V] {
+func NewOpenAddressingWithMaxSize[K comparable, V any](size int) types.Map[K, V] {
 	table := make([]*bucket[K, V], size)
 	for i := 0; i < size; i++ {
 		table[i] = &bucket[K, V]{
