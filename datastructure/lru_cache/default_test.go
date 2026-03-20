@@ -10,60 +10,70 @@ import (
 )
 
 func Test_defaultLRUCache_PutAndGet(t *testing.T) {
-	cache := lru_cache.NewDefault(2)
+	cache := lru_cache.NewDefault[int, int](2)
 	cache.Put(1, 1)
 	cache.Put(2, 2)
 
-	if got, want := cache.Get(1), 1; got != want {
-		t.Errorf("got %v but want %v", got, want)
+	if got, ok := cache.Get(1); !ok || got != 1 {
+		t.Errorf("got %v, ok %v but want 1, true", got, ok)
 	}
 
 	cache.Put(3, 3) // evicts key 2
-	if got, want := cache.Get(2), -1; got != want {
-		t.Errorf("got %v but want %v", got, want)
+	if _, ok := cache.Get(2); ok {
+		t.Errorf("expected key 2 to be evicted")
 	}
 
 	cache.Put(4, 4) // evicts key 1
-	if got, want := cache.Get(1), -1; got != want {
-		t.Errorf("got %v but want %v", got, want)
+	if _, ok := cache.Get(1); ok {
+		t.Errorf("expected key 1 to be evicted")
 	}
 
-	if got, want := cache.Get(3), 3; got != want {
-		t.Errorf("got %v but want %v", got, want)
+	if got, ok := cache.Get(3); !ok || got != 3 {
+		t.Errorf("got %v, ok %v but want 3, true", got, ok)
 	}
 
-	if got, want := cache.Get(4), 4; got != want {
-		t.Errorf("got %v but want %v", got, want)
+	if got, ok := cache.Get(4); !ok || got != 4 {
+		t.Errorf("got %v, ok %v but want 4, true", got, ok)
 	}
 }
 
 func Test_defaultLRUCache_PutAndGet2(t *testing.T) {
-	/*
-		NewDefault(2)
-		put(2, 1)
-		put(2, 2)
-		get(2)
-		put(1, 1)
-		put(4, 1)
-		get(2)
-	*/
-	cache := lru_cache.NewDefault(2)
+	cache := lru_cache.NewDefault[int, int](2)
 	cache.Put(2, 1)
 	cache.Put(2, 2)
-	if got, want := cache.Get(2), 2; got != want {
-		t.Errorf("got %v but want %v", got, want)
+	if got, ok := cache.Get(2); !ok || got != 2 {
+		t.Errorf("got %v, ok %v but want 2, true", got, ok)
 	}
 
 	cache.Put(1, 1)
 	cache.Put(4, 1)
-	if got, want := cache.Get(2), -1; got != want {
-		t.Errorf("got %v but want %v", got, want)
+	if _, ok := cache.Get(2); ok {
+		t.Errorf("expected key 2 to be evicted")
+	}
+}
+
+func Test_defaultLRUCache_StringKeys(t *testing.T) {
+	cache := lru_cache.NewDefault[string, int](2)
+	cache.Put("a", 1)
+	cache.Put("b", 2)
+
+	if got, ok := cache.Get("a"); !ok || got != 1 {
+		t.Errorf("got %v, ok %v but want 1, true", got, ok)
+	}
+
+	cache.Put("c", 3) // evicts "b"
+	if _, ok := cache.Get("b"); ok {
+		t.Errorf("expected key 'b' to be evicted")
+	}
+
+	if got, ok := cache.Get("c"); !ok || got != 3 {
+		t.Errorf("got %v, ok %v but want 3, true", got, ok)
 	}
 }
 
 func Test_defaultLRUCache_Dump(t *testing.T) {
-	cache := lru_cache.NewDefault(2)
-	dumper, ok := cache.(lru_cache.Dumper)
+	cache := lru_cache.NewDefault[int, int](2)
+	dumper, ok := any(cache).(lru_cache.Dumper)
 	if !ok {
 		t.Fatal("Must implement Dumper")
 	}
