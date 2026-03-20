@@ -5,15 +5,15 @@ import (
 	"fmt"
 )
 
-type Vertex struct {
+type Node struct {
 	value string
 }
 
-func NewVertex(v string) *Vertex {
-	return &Vertex{value: v}
+func NewNode(v string) *Node {
+	return &Node{value: v}
 }
 
-func (v *Vertex) IsEqual(other *Vertex) bool {
+func (v *Node) IsEqual(other *Node) bool {
 	if v.value != "" && other.value != "" && v.value == other.value {
 		return true
 	}
@@ -23,16 +23,16 @@ func (v *Vertex) IsEqual(other *Vertex) bool {
 	return false
 }
 
-func (v *Vertex) String() string {
+func (v *Node) String() string {
 	return v.value
 }
 
 type Edge struct {
-	start *Vertex
-	end   *Vertex
+	start *Node
+	end   *Node
 }
 
-func newEdge(start, end *Vertex) *Edge {
+func newEdge(start, end *Node) *Edge {
 	return &Edge{
 		start: start,
 		end:   end,
@@ -44,20 +44,20 @@ func (e *Edge) String() string {
 }
 
 type Graph struct {
-	// All vertices this Graph has
-	vertices *vertexSet
-	// Edges per vertex
-	edges map[*Vertex][]*Edge
+	// All nodes this Graph has
+	nodes *nodeSet
+	// Edges per node
+	edges map[*Node][]*Edge
 }
 
 func New() *Graph {
 	return &Graph{
-		vertices: NewVertexSet(100),
-		edges:    make(map[*Vertex][]*Edge, 100),
+		nodes: NewNodeSet(100),
+		edges: make(map[*Node][]*Edge, 100),
 	}
 }
 
-func (g *Graph) Edges(v *Vertex) []*Edge {
+func (g *Graph) Edges(v *Node) []*Edge {
 	if edges, ok := g.edges[v]; ok {
 		return edges
 	}
@@ -66,7 +66,7 @@ func (g *Graph) Edges(v *Vertex) []*Edge {
 
 func (g *Graph) Dump() string {
 	b := new(bytes.Buffer)
-	for _, v := range g.Vertices() {
+	for _, v := range g.Nodes() {
 		edges := g.Edges(v)
 		if edges == nil {
 			continue
@@ -79,11 +79,11 @@ func (g *Graph) Dump() string {
 	return b.String()
 }
 
-func (g *Graph) Vertices() []*Vertex {
-	return g.vertices.Values()
+func (g *Graph) Nodes() []*Node {
+	return g.nodes.Values()
 }
 
-func (g *Graph) AddEdge(start *Vertex, end *Vertex) {
+func (g *Graph) AddEdge(start *Node, end *Node) {
 	g.edges[start] = append(g.edges[start], newEdge(start, end))
-	g.vertices.Add(start)
+	g.nodes.Add(start)
 }
