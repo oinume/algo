@@ -9,16 +9,17 @@ import (
 )
 
 func TestOpenAddressing_Put(t *testing.T) {
-	hashTable := hash_table.NewOpenAddressing()
+	hashTable := hash_table.NewOpenAddressing[int, int]()
 
 	tests := map[string]struct {
-		key        interface{}
-		value      interface{}
-		wantReturn interface{}
+		key        int
+		value      int
+		wantReturn int
+		wantOld    bool
 	}{
-		"new key 1":      {key: 1, value: 10, wantReturn: nil},
-		"new key 2":      {key: 2, value: 20, wantReturn: nil},
-		"existing key 2": {key: 2, value: 30, wantReturn: 20},
+		"new key 1":      {key: 1, value: 10, wantReturn: 0, wantOld: false},
+		"new key 2":      {key: 2, value: 20, wantReturn: 0, wantOld: false},
+		"existing key 2": {key: 2, value: 30, wantReturn: 20, wantOld: true},
 	}
 
 	for name, tc := range tests {
@@ -26,29 +27,28 @@ func TestOpenAddressing_Put(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Put returns unexpected error: %v", err)
 		}
-		testings.AssertEqual(t, tc.wantReturn, ret, fmt.Sprintf("%v: Put returns unexpected value", name))
+		if tc.wantOld {
+			testings.AssertEqual(t, tc.wantReturn, ret, fmt.Sprintf("%v: Put returns unexpected value", name))
+		}
 	}
 	testings.AssertEqual(t, 2, hashTable.Size(), "Size")
 }
 
 func TestOpenAddressing_Put_Rehash(t *testing.T) {
-	hashTable := hash_table.NewOpenAddressingWithMaxSize(3)
+	hashTable := hash_table.NewOpenAddressingWithMaxSize[string, string](3)
 
 	tests := map[string]struct {
-		key   interface{}
-		value interface{}
+		key   string
+		value string
 	}{
 		"abc": {key: "abc", value: "ABC"},
 		"cba": {key: "cba", value: "CBA"},
 	}
 
 	for name, tt := range tests {
-		got, err := hashTable.Put(tt.key, tt.value)
+		_, err := hashTable.Put(tt.key, tt.value)
 		if err != nil {
 			t.Fatalf("%v: Put returns unexpected error: %v", name, err)
-		}
-		if got != nil {
-			t.Fatalf("%v: Put must return nil but %v", name, got)
 		}
 
 		result, err := hashTable.Get(tt.key)
@@ -60,11 +60,11 @@ func TestOpenAddressing_Put_Rehash(t *testing.T) {
 }
 
 func TestOpenAddressing_Get(t *testing.T) {
-	hashTable := hash_table.NewOpenAddressing()
+	hashTable := hash_table.NewOpenAddressing[int, int]()
 
 	tests := []struct {
-		key   interface{}
-		value interface{}
+		key   int
+		value int
 	}{
 		{key: 1, value: 10},
 		{key: 2, value: 20},
@@ -84,11 +84,11 @@ func TestOpenAddressing_Get(t *testing.T) {
 }
 
 func TestOpenAddressing_Remove(t *testing.T) {
-	hashTable := hash_table.NewOpenAddressing()
+	hashTable := hash_table.NewOpenAddressing[string, string]()
 
 	tests := []struct {
-		key    interface{}
-		value  interface{}
+		key    string
+		value  string
 		remove bool
 	}{
 		{key: "abc", value: "ABC", remove: true},
