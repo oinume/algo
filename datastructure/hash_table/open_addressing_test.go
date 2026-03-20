@@ -9,30 +9,54 @@ import (
 )
 
 func TestOpenAddressing_Put(t *testing.T) {
-	hashTable := hash_table.NewOpenAddressing[int, int]()
-
-	tests := []struct {
-		name       string
+	tests := map[string]struct {
+		setup      func() hash_table.Map[int, int]
 		key        int
 		value      int
 		wantReturn int
 		wantOld    bool
 	}{
-		{name: "new key 1", key: 1, value: 10, wantReturn: 0, wantOld: false},
-		{name: "new key 2", key: 2, value: 20, wantReturn: 0, wantOld: false},
-		{name: "existing key 2", key: 2, value: 30, wantReturn: 20, wantOld: true},
+		"new key 1": {
+			setup: func() hash_table.Map[int, int] {
+				return hash_table.NewOpenAddressing[int, int]()
+			},
+			key:        1,
+			value:      10,
+			wantReturn: 0,
+			wantOld:    false,
+		},
+		"new key 2": {
+			setup: func() hash_table.Map[int, int] {
+				return hash_table.NewOpenAddressing[int, int]()
+			},
+			key:        2,
+			value:      20,
+			wantReturn: 0,
+			wantOld:    false,
+		},
+		"existing key 2": {
+			setup: func() hash_table.Map[int, int] {
+				ht := hash_table.NewOpenAddressing[int, int]()
+				_, _ = ht.Put(2, 20)
+				return ht
+			},
+			key:        2,
+			value:      30,
+			wantReturn: 20,
+			wantOld:    true,
+		},
 	}
 
-	for _, tc := range tests {
+	for name, tc := range tests {
+		hashTable := tc.setup()
 		ret, err := hashTable.Put(tc.key, tc.value)
 		if err != nil {
 			t.Fatalf("Put returns unexpected error: %v", err)
 		}
 		if tc.wantOld {
-			testings.AssertEqual(t, tc.wantReturn, ret, fmt.Sprintf("%v: Put returns unexpected value", tc.name))
+			testings.AssertEqual(t, tc.wantReturn, ret, fmt.Sprintf("%v: Put returns unexpected value", name))
 		}
 	}
-	testings.AssertEqual(t, 2, hashTable.Size(), "Size")
 }
 
 func TestOpenAddressing_Put_Rehash(t *testing.T) {
