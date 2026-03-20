@@ -11,24 +11,25 @@ import (
 func TestOpenAddressing_Put(t *testing.T) {
 	hashTable := hash_table.NewOpenAddressing[int, int]()
 
-	tests := map[string]struct {
+	tests := []struct {
+		name       string
 		key        int
 		value      int
 		wantReturn int
 		wantOld    bool
 	}{
-		"new key 1":      {key: 1, value: 10, wantReturn: 0, wantOld: false},
-		"new key 2":      {key: 2, value: 20, wantReturn: 0, wantOld: false},
-		"existing key 2": {key: 2, value: 30, wantReturn: 20, wantOld: true},
+		{name: "new key 1", key: 1, value: 10, wantReturn: 0, wantOld: false},
+		{name: "new key 2", key: 2, value: 20, wantReturn: 0, wantOld: false},
+		{name: "existing key 2", key: 2, value: 30, wantReturn: 20, wantOld: true},
 	}
 
-	for name, tc := range tests {
+	for _, tc := range tests {
 		ret, err := hashTable.Put(tc.key, tc.value)
 		if err != nil {
 			t.Fatalf("Put returns unexpected error: %v", err)
 		}
 		if tc.wantOld {
-			testings.AssertEqual(t, tc.wantReturn, ret, fmt.Sprintf("%v: Put returns unexpected value", name))
+			testings.AssertEqual(t, tc.wantReturn, ret, fmt.Sprintf("%v: Put returns unexpected value", tc.name))
 		}
 	}
 	testings.AssertEqual(t, 2, hashTable.Size(), "Size")
