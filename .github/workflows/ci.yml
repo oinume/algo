@@ -16,7 +16,7 @@ jobs:
       max-parallel: 2
       matrix:
         version:
-          - 1.26
+          - 1.18
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
