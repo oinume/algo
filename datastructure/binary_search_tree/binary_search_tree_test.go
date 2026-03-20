@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"github.com/oinume/algo/testings"
+	"github.com/oinume/algo/internal/assert"
 )
 
 var cmpOptions = []cmp.Option{
@@ -15,7 +15,7 @@ var cmpOptions = []cmp.Option{
 func TestNewTree(t *testing.T) {
 	root := NewNode(100)
 	tree := NewTree(NewNode(100))
-	testings.AssertEqual(t, root, tree.Root(), "unexpected tree root", cmpOptions...)
+	assert.AssertEqual(t, root, tree.Root(), "unexpected tree root", cmpOptions...)
 }
 
 func TestTree_Find(t *testing.T) {
@@ -37,13 +37,13 @@ func TestTree_Find(t *testing.T) {
 			if err != nil {
 				t.Fatalf("tree.Find returns unexpected error: %v", err)
 			}
-			testings.AssertEqual(t, test.want, got, "tree.Find returns unexpected node", cmpOptions...)
+			assert.AssertEqual(t, test.want, got, "tree.Find returns unexpected node", cmpOptions...)
 		}
 	})
 
 	t.Run("not found", func(t *testing.T) {
 		_, err := tree.Find(100)
-		testings.AssertEqual(t, ErrNotFound.Error(), err.Error(), "err must be ErrNotFound")
+		assert.AssertEqual(t, ErrNotFound.Error(), err.Error(), "err must be ErrNotFound")
 	})
 }
 
@@ -104,8 +104,8 @@ func TestTree_Insert(t *testing.T) {
 		if err != nil {
 			t.Fatalf("tree.Insert failed: %v", err)
 		}
-		testings.AssertEqual(t, test.want.Value(), node.Value(), "")
-		testings.AssertEqual(t, test.wantTreeFunc(), tree, "", cmpOptions...)
+		assert.AssertEqual(t, test.want.Value(), node.Value(), "")
+		assert.AssertEqual(t, test.wantTreeFunc(), tree, "", cmpOptions...)
 	}
 }
 
@@ -115,7 +115,7 @@ func TestTree_Insert_Exist(t *testing.T) {
 	tree.root.right = NewNode(6)
 
 	_, err := tree.Insert(6)
-	testings.AssertEqual(t, ErrAlreadyExists.Error(), err.Error(), "err must be ErrAlreadyExists")
+	assert.AssertEqual(t, ErrAlreadyExists.Error(), err.Error(), "err must be ErrAlreadyExists")
 }
 
 func TestTree_Remove(t *testing.T) {
@@ -268,8 +268,8 @@ func TestTree_Remove(t *testing.T) {
 			if err != nil {
 				t.Fatalf("target is %v", test.target)
 			}
-			testings.AssertEqual(t, test.target, got.Value(), "", cmpOptions...)
-			testings.AssertEqual(t, test.removedAfterTree(), tree, "", cmpOptions...)
+			assert.AssertEqual(t, test.target, got.Value(), "", cmpOptions...)
+			assert.AssertEqual(t, test.removedAfterTree(), tree, "", cmpOptions...)
 		})
 	}
 }
@@ -281,5 +281,5 @@ func TestTree_Remove_NotFound(t *testing.T) {
 	tree.root.right.right = NewNode(10)
 
 	_, err := tree.Remove(15)
-	testings.AssertEqual(t, ErrNotFound.Error(), err.Error(), "err must be ErrNotFound")
+	assert.AssertEqual(t, ErrNotFound.Error(), err.Error(), "err must be ErrNotFound")
 }

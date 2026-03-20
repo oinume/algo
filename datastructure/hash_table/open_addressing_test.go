@@ -6,7 +6,7 @@ import (
 
 	"github.com/oinume/algo/datastructure/hash_table"
 	"github.com/oinume/algo/datastructure/types"
-	"github.com/oinume/algo/testings"
+	"github.com/oinume/algo/internal/assert"
 )
 
 func TestOpenAddressing_Put(t *testing.T) {
@@ -55,7 +55,7 @@ func TestOpenAddressing_Put(t *testing.T) {
 			t.Fatalf("Put returns unexpected error: %v", err)
 		}
 		if tc.wantOld {
-			testings.AssertEqual(t, tc.wantReturn, ret, fmt.Sprintf("%v: Put returns unexpected value", name))
+			assert.AssertEqual(t, tc.wantReturn, ret, fmt.Sprintf("%v: Put returns unexpected value", name))
 		}
 	}
 }
@@ -81,7 +81,7 @@ func TestOpenAddressing_Put_Rehash(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Get returns unexpected error: %v", err)
 		}
-		testings.AssertEqual(t, tt.value, result, fmt.Sprintf("%v: Get returns unexpected value", name))
+		assert.AssertEqual(t, tt.value, result, fmt.Sprintf("%v: Get returns unexpected value", name))
 	}
 }
 
@@ -105,7 +105,7 @@ func TestOpenAddressing_Get(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Get returns unexpected error: %v", err)
 		}
-		testings.AssertEqual(t, tt.value, got, "Get")
+		assert.AssertEqual(t, tt.value, got, "Get")
 	}
 }
 
@@ -128,7 +128,7 @@ func TestOpenAddressing_Remove(t *testing.T) {
 		}
 	}
 	size := hashTable.Size()
-	testings.AssertEqual(t, len(tests), size, "Size")
+	assert.AssertEqual(t, len(tests), size, "Size")
 
 	for _, tt := range tests {
 		if tt.remove {
@@ -136,9 +136,9 @@ func TestOpenAddressing_Remove(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Remove returns unexpected error: %v", err)
 			}
-			testings.AssertEqual(t, tt.value, removed, "Removed value")
+			assert.AssertEqual(t, tt.value, removed, "Removed value")
 			size--
 		}
 	}
-	testings.AssertEqual(t, size, hashTable.Size(), "Size() must be decremented by removal")
+	assert.AssertEqual(t, size, hashTable.Size(), "Size() must be decremented by removal")
 }

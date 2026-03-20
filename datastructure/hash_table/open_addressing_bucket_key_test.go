@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/oinume/algo/testings"
+	"github.com/oinume/algo/internal/assert"
 )
 
 func Test_bucketKey_isEmpty(t *testing.T) {
 	empty := newEmptyBucketKey[string]()
-	testings.AssertEqual(t, true, empty.isEmpty(), "isEmpty")
+	assert.AssertEqual(t, true, empty.isEmpty(), "isEmpty")
 }
 
 func Test_bucketKey_HashCode(t *testing.T) {
@@ -37,7 +37,7 @@ func Test_bucketKey_HashCode(t *testing.T) {
 	for name, tt := range tests {
 		key1 := &bucketKey[any]{data: tt.key1, state: bucketStateNormal}
 		key2 := &bucketKey[any]{data: tt.key2, state: bucketStateNormal}
-		testings.AssertEqual(
+		assert.AssertEqual(
 			t,
 			tt.sameHashCode,
 			key1.HashCode() == key2.HashCode(),

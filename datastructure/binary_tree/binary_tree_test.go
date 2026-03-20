@@ -3,7 +3,7 @@ package binary_tree
 import (
 	"testing"
 
-	"github.com/oinume/algo/testings"
+	"github.com/oinume/algo/internal/assert"
 )
 
 type visitor1 struct {
@@ -24,7 +24,7 @@ func TestBinaryTreeNodeTraversePreorder(t *testing.T) {
 	}
 	root.TraversePreorder(v1, 1)
 
-	testings.AssertEqual(t, []interface{}{1, 2, 3, 100}, v1.visited, "")
+	assert.AssertEqual(t, []interface{}{1, 2, 3, 100}, v1.visited, "")
 }
 
 type visitor2 struct {
@@ -45,7 +45,7 @@ func TestBinaryTreeNodeTraverseInorder(t *testing.T) {
 	}
 	root.TraverseInorder(v2, 1)
 
-	testings.AssertEqual(t, []interface{}{2, 1, 100, 3}, v2.visited, "")
+	assert.AssertEqual(t, []interface{}{2, 1, 100, 3}, v2.visited, "")
 }
 
 type visitor3 struct {
@@ -66,7 +66,7 @@ func TestBinaryTreeNodeTraversePostorder(t *testing.T) {
 	}
 	root.TraversePostorder(v3, 1)
 
-	testings.AssertEqual(t, []interface{}{2, 100, 3, 1}, v3.visited, "")
+	assert.AssertEqual(t, []interface{}{2, 100, 3, 1}, v3.visited, "")
 }
 
 // nolint:gofmt
