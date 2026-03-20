@@ -9,8 +9,8 @@ import (
 // https://www.geeksforgeeks.org/graph-data-structure-and-algorithms/
 func Test_dfsFinder_Find_2V(t *testing.T) {
 	graph := New()
-	v1 := NewVertex("1")
-	v2 := NewVertex("2")
+	v1 := NewNode("1")
+	v2 := NewNode("2")
 	graph.AddEdge(v1, v2)
 
 	tests := map[string]struct {
@@ -34,9 +34,9 @@ func Test_dfsFinder_Find_2V(t *testing.T) {
 
 // https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/
 func Test_dfsFinder_Find_4V(t *testing.T) {
-	v := make([]*Vertex, 4)
+	v := make([]*Node, 4)
 	for i := 0; i < len(v); i++ {
-		v[i] = NewVertex(fmt.Sprint(i))
+		v[i] = NewNode(fmt.Sprint(i))
 	}
 	graph := New()
 	graph.AddEdge(v[0], v[1])
@@ -47,23 +47,23 @@ func Test_dfsFinder_Find_4V(t *testing.T) {
 	graph.AddEdge(v[3], v[3])
 
 	tests := map[string]struct {
-		finder              Finder
-		wantVisitedVertices []*Vertex
+		finder           Finder
+		wantVisitedNodes []*Node
 	}{
 		"dfsRecursiveFinder": {
 			finder: NewDFSRecursiveFinder(),
-			wantVisitedVertices: []*Vertex{
-				NewVertex("2"),
-				NewVertex("0"),
-				NewVertex("1"),
-				NewVertex("3"),
+			wantVisitedNodes: []*Node{
+				NewNode("2"),
+				NewNode("0"),
+				NewNode("1"),
+				NewNode("3"),
 			},
 		},
 		"dfsLoopFinder": {
 			finder: NewDFSLoopFinder(),
-			wantVisitedVertices: []*Vertex{
-				NewVertex("2"),
-				NewVertex("3"),
+			wantVisitedNodes: []*Node{
+				NewNode("2"),
+				NewNode("3"),
 			},
 		},
 	}
@@ -74,8 +74,8 @@ func Test_dfsFinder_Find_4V(t *testing.T) {
 			if found := test.finder.Find(graph, v[2], v[3], lv); !found {
 				t.Errorf("%v not found somehow", v[3])
 			}
-			if got, want := lv.list, test.wantVisitedVertices; !reflect.DeepEqual(got, want) {
-				t.Errorf("visiting vertex is not correct: got = %+v, want = %+v", got, want)
+			if got, want := lv.list, test.wantVisitedNodes; !reflect.DeepEqual(got, want) {
+				t.Errorf("visiting node is not correct: got = %+v, want = %+v", got, want)
 			}
 		})
 	}

@@ -5,21 +5,21 @@ import (
 )
 
 type Finder interface {
-	Find(g *Graph, start *Vertex, target *Vertex, visitor Visitor) bool
+	Find(g *Graph, start *Node, target *Node, visitor Visitor) bool
 }
 
 // dfsRecursiveFinder is depth first search finder
 type dfsRecursiveFinder struct {
-	visited map[*Vertex]struct{}
+	visited map[*Node]struct{}
 }
 
 func NewDFSRecursiveFinder() Finder {
 	return &dfsRecursiveFinder{
-		visited: make(map[*Vertex]struct{}, 100),
+		visited: make(map[*Node]struct{}, 100),
 	}
 }
 
-func (dfs *dfsRecursiveFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor Visitor) bool {
+func (dfs *dfsRecursiveFinder) Find(g *Graph, start *Node, target *Node, visitor Visitor) bool {
 	//fmt.Printf("Find(): start = %+v\n", start)
 	visitor.Visit(g, start)
 
@@ -46,34 +46,34 @@ func (dfs *dfsRecursiveFinder) Find(g *Graph, start *Vertex, target *Vertex, vis
 }
 
 type dfsLoopFinder struct {
-	visited map[*Vertex]struct{}
+	visited map[*Node]struct{}
 }
 
 func NewDFSLoopFinder() Finder {
 	return &dfsLoopFinder{
-		visited: make(map[*Vertex]struct{}, 100),
+		visited: make(map[*Node]struct{}, 100),
 	}
 }
 
-func (dfs *dfsLoopFinder) Find(g *Graph, start *Vertex, target *Vertex, visitor Visitor) bool {
-	st := stack.New[*Vertex](g.vertices.Size())
+func (dfs *dfsLoopFinder) Find(g *Graph, start *Node, target *Node, visitor Visitor) bool {
+	st := stack.New[*Node](g.nodes.Size())
 	st.Push(start)
 
 	for !st.IsEmpty() {
-		vertex, err := st.Pop()
+		node, err := st.Pop()
 		if err != nil {
 			// Must not reach here
 			return false
 		}
 
-		//fmt.Printf("vertex:%v, edges=%+v\n", vertex, g.Edges(vertex))
-		visitor.Visit(g, vertex)
-		if vertex.IsEqual(target) {
+		//fmt.Printf("node:%v, edges=%+v\n", node, g.Edges(node))
+		visitor.Visit(g, node)
+		if node.IsEqual(target) {
 			return true
 		}
-		dfs.visited[vertex] = struct{}{}
+		dfs.visited[node] = struct{}{}
 
-		for _, edge := range g.Edges(vertex) {
+		for _, edge := range g.Edges(node) {
 			if _, visited := dfs.visited[edge.end]; visited {
 				continue
 			}
