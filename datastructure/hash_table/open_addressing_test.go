@@ -5,19 +5,20 @@ import (
 	"testing"
 
 	"github.com/oinume/algo/datastructure/hash_table"
+	"github.com/oinume/algo/datastructure/types"
 	"github.com/oinume/algo/testings"
 )
 
 func TestOpenAddressing_Put(t *testing.T) {
 	tests := map[string]struct {
-		setup      func() hash_table.Map[int, int]
+		setup      func() types.Map[int, int]
 		key        int
 		value      int
 		wantReturn int
 		wantOld    bool
 	}{
 		"new key 1": {
-			setup: func() hash_table.Map[int, int] {
+			setup: func() types.Map[int, int] {
 				return hash_table.NewOpenAddressing[int, int]()
 			},
 			key:        1,
@@ -26,7 +27,7 @@ func TestOpenAddressing_Put(t *testing.T) {
 			wantOld:    false,
 		},
 		"new key 2": {
-			setup: func() hash_table.Map[int, int] {
+			setup: func() types.Map[int, int] {
 				return hash_table.NewOpenAddressing[int, int]()
 			},
 			key:        2,
@@ -35,7 +36,7 @@ func TestOpenAddressing_Put(t *testing.T) {
 			wantOld:    false,
 		},
 		"existing key 2": {
-			setup: func() hash_table.Map[int, int] {
+			setup: func() types.Map[int, int] {
 				ht := hash_table.NewOpenAddressing[int, int]()
 				_, _ = ht.Put(2, 20)
 				return ht

@@ -3,6 +3,8 @@ package hash_table
 import (
 	"container/list"
 	"fmt"
+
+	"github.com/oinume/algo/datastructure/types"
 )
 
 const defaultMaxSize = 100
@@ -18,7 +20,7 @@ type item[K comparable, V any] struct {
 	value V
 }
 
-func NewChaining[K comparable, V any](maxSize int) Map[K, V] {
+func NewChaining[K comparable, V any](maxSize int) types.Map[K, V] {
 	if maxSize <= 0 {
 		maxSize = defaultMaxSize
 	}
