@@ -4,23 +4,22 @@ import (
 	"github.com/oinume/algo/datastructure/stack"
 )
 
-type Finder interface {
-	Find(g *Graph, start *Node, target *Node, visitor Visitor) bool
+type Finder[T comparable] interface {
+	Find(g *Graph[T], start *Node[T], target *Node[T], visitor Visitor[T]) bool
 }
 
 // dfsRecursiveFinder is depth first search finder
-type dfsRecursiveFinder struct {
-	visited map[*Node]struct{}
+type dfsRecursiveFinder[T comparable] struct {
+	visited map[*Node[T]]struct{}
 }
 
-func NewDFSRecursiveFinder() Finder {
-	return &dfsRecursiveFinder{
-		visited: make(map[*Node]struct{}, 100),
+func NewDFSRecursiveFinder[T comparable]() Finder[T] {
+	return &dfsRecursiveFinder[T]{
+		visited: make(map[*Node[T]]struct{}, 100),
 	}
 }
 
-func (dfs *dfsRecursiveFinder) Find(g *Graph, start *Node, target *Node, visitor Visitor) bool {
-	//fmt.Printf("Find(): start = %+v\n", start)
+func (dfs *dfsRecursiveFinder[T]) Find(g *Graph[T], start *Node[T], target *Node[T], visitor Visitor[T]) bool {
 	visitor.Visit(g, start)
 
 	if start.IsEqual(target) {
@@ -32,7 +31,6 @@ func (dfs *dfsRecursiveFinder) Find(g *Graph, start *Node, target *Node, visitor
 
 	dfs.visited[start] = struct{}{}
 	edges := g.Edges(start)
-	//fmt.Printf("edges = %+v\n", edges)
 	for _, edge := range edges {
 		if _, visited := dfs.visited[edge.end]; visited {
 			continue
@@ -45,18 +43,18 @@ func (dfs *dfsRecursiveFinder) Find(g *Graph, start *Node, target *Node, visitor
 	return false
 }
 
-type dfsLoopFinder struct {
-	visited map[*Node]struct{}
+type dfsLoopFinder[T comparable] struct {
+	visited map[*Node[T]]struct{}
 }
 
-func NewDFSLoopFinder() Finder {
-	return &dfsLoopFinder{
-		visited: make(map[*Node]struct{}, 100),
+func NewDFSLoopFinder[T comparable]() Finder[T] {
+	return &dfsLoopFinder[T]{
+		visited: make(map[*Node[T]]struct{}, 100),
 	}
 }
 
-func (dfs *dfsLoopFinder) Find(g *Graph, start *Node, target *Node, visitor Visitor) bool {
-	st := stack.New[*Node](g.nodes.Size())
+func (dfs *dfsLoopFinder[T]) Find(g *Graph[T], start *Node[T], target *Node[T], visitor Visitor[T]) bool {
+	st := stack.New[*Node[T]](g.nodes.Size())
 	st.Push(start)
 
 	for !st.IsEmpty() {
@@ -66,7 +64,6 @@ func (dfs *dfsLoopFinder) Find(g *Graph, start *Node, target *Node, visitor Visi
 			return false
 		}
 
-		//fmt.Printf("node:%v, edges=%+v\n", node, g.Edges(node))
 		visitor.Visit(g, node)
 		if node.IsEqual(target) {
 			return true
@@ -78,7 +75,6 @@ func (dfs *dfsLoopFinder) Find(g *Graph, start *Node, target *Node, visitor Visi
 				continue
 			}
 			st.Push(edge.end)
-			//fmt.Printf("Pushed: %+v\n", edge.end)
 		}
 	}
 

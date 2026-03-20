@@ -18,18 +18,11 @@ jobs:
         version:
           - 1.26
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        id: cache
-        with:
-          path: ${{ env.GOPATH }}/pkg/mod
-          key: ${{ runner.os }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
         with:
           go-version: ${{ matrix.version }}
+          cache-dependency-path: "go.sum"
       - name: Run lint
         run: |
             make lint
