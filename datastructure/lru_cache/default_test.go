@@ -77,6 +77,6 @@ func Test_defaultLRUCache_Dump(t *testing.T) {
 	}
 	got := b.String()
 	if !strings.Contains(got, fmt.Sprint(value)) {
-		t.Errorf("got %q must contain %q", got, value)
+		t.Errorf("got %q must contain %d", got, value)
 	}
 }
