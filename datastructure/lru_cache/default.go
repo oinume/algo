@@ -8,36 +8,37 @@ import (
 	"sync"
 )
 
-type defaultLRUCache struct {
+type defaultLRUCache[K comparable, V any] struct {
 	capacity   int
-	values     map[int]*item
+	values     map[K]*item[V]
 	currentAge int
 	mutex      *sync.Mutex
 }
 
-func NewDefault(capacity int) LRUCache {
-	return &defaultLRUCache{
+func NewDefault[K comparable, V any](capacity int) LRUCache[K, V] {
+	return &defaultLRUCache[K, V]{
 		capacity:   capacity,
-		values:     make(map[int]*item, capacity),
+		values:     make(map[K]*item[V], capacity),
 		currentAge: 0,
 		mutex:      new(sync.Mutex),
 	}
 }
 
-func (c *defaultLRUCache) Get(key int) int {
+func (c *defaultLRUCache[K, V]) Get(key K) (V, bool) {
 	i, ok := c.values[key]
 	if !ok {
-		return -1
+		var zero V
+		return zero, false
 	}
 	c.mutex.Lock()
 	i.age = c.currentAge
 	// `Get` also increment current age
 	c.currentAge++
 	c.mutex.Unlock()
-	return i.value
+	return i.value, true
 }
 
-func (c *defaultLRUCache) Put(key int, value int) {
+func (c *defaultLRUCache[K, V]) Put(key K, value V) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
@@ -50,20 +51,22 @@ func (c *defaultLRUCache) Put(key int, value int) {
 		if len(c.values) >= c.capacity {
 			// Search key with least age when over capacity before setting key and value
 			leastAge := math.MaxInt32
-			leastAgeKey := 0
+			var leastAgeKey K
+			found := false
 			for key, item := range c.values {
 				if item.age < leastAge {
 					leastAge = item.age
 					leastAgeKey = key
+					found = true
 				}
 			}
-			if leastAgeKey != 0 {
+			if found {
 				// Evict least age key from cache
 				delete(c.values, leastAgeKey)
 			}
 		}
 		// Set key and value to cache
-		c.values[key] = &item{
+		c.values[key] = &item[V]{
 			value: value,
 			age:   c.currentAge,
 		}
@@ -71,7 +74,7 @@ func (c *defaultLRUCache) Put(key int, value int) {
 	}
 }
 
-func (c *defaultLRUCache) Dump(w io.Writer) error {
+func (c *defaultLRUCache[K, V]) Dump(w io.Writer) error {
 	t := `
 {
   capacity: %v

@@ -4,11 +4,11 @@ import (
 	"io"
 )
 
-type LRUCache interface {
-	// Get returns value for `key`. Returns -1 if not found
-	Get(key int) int
-	// Put sets value with key
-	Put(key, value int)
+type LRUCache[K comparable, V any] interface {
+	// Get returns value for `key` and true if found, or zero value and false if not found.
+	Get(key K) (V, bool)
+	// Put sets value with key.
+	Put(key K, value V)
 }
 
 type Dumper interface {
@@ -16,7 +16,7 @@ type Dumper interface {
 	Dump(w io.Writer) error
 }
 
-type item struct {
-	value int
+type item[V any] struct {
+	value V
 	age   int
 }
